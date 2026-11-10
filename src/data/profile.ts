@@ -9,11 +9,21 @@ export const profile = {
   phone: '+91 9205231252',
   phoneHref: 'tel:+919205231252',
   location: 'Hyderabad, India',
+  linkedin: 'https://www.linkedin.com/in/anand-raj-238131290',
+  linkedinLabel: 'View LinkedIn profile',
   cv: '/files/Anand-Raj-CV.pdf',
   photo: '/images/anand-raj.jpeg' as string,
   fellowship: 'Ministry of Education (MoE) Fellow',
   keywords: ['Labour Studies', 'Migration', 'Gig & Platform Economy', 'Urban Studies', 'Political Economy'],
 };
+
+// Academic and professional profiles (Home page bar).
+export const academicProfiles = [
+  { label: 'Google Scholar', href: 'https://scholar.google.com/citations?hl=en&user=Q_Pl2bMAAAAJ' },
+  // TODO: replace with the full ORCID iD URL, e.g. https://orcid.org/0000-0000-0000-0000
+  { label: 'ORCID', href: 'https://orcid.org/' },
+  { label: 'Web of Science', href: 'https://www.webofscience.com/wos/author/record/RJC-5596-2026' },
+];
 
 // Extended biography used on the About page.
 export const biography = [

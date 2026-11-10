@@ -1,0 +1,98 @@
+---
+// A single navy bar divided into segments, one per academic profile.
+import Icon from './Icon.astro';
+import { academicProfiles } from '../data/profile';
+---
+
+<nav class="profile-bar" aria-label="Academic profiles">
+  <ul>
+    {academicProfiles.map((p) => (
+      <li>
+        <a href={p.href} target="_blank" rel="noopener noreferrer">
+          <span>{p.label}</span>
+          <Icon name="external" />
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>
+
+<style>
+  .profile-bar {
+    display: inline-block;
+    max-width: 100%;
+    background: var(--ink);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  li + li {
+    border-left: 1px solid rgb(255 255 255 / 0.18);
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.7rem 1.15rem;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s ease;
+  }
+
+  a:hover {
+    background: var(--accent-strong);
+    color: #fff;
+  }
+
+  a:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+  }
+
+  a :global(svg) {
+    width: 0.85rem;
+    height: 0.85rem;
+    opacity: 0.7;
+  }
+
+  /* Phones: 2 × 2 grid inside the same box */
+  @media (max-width: 560px) {
+    .profile-bar {
+      display: block;
+    }
+
+    ul {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    li + li {
+      border-left: 0;
+    }
+
+    li:nth-child(even) {
+      border-left: 1px solid rgb(255 255 255 / 0.18);
+    }
+
+    li:nth-child(n + 3) {
+      border-top: 1px solid rgb(255 255 255 / 0.18);
+    }
+
+    a {
+      justify-content: center;
+      padding: 0.75rem 0.5rem;
+    }
+  }
+</style>

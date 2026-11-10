@@ -30,6 +30,10 @@ const { showAffiliation = true } = Astro.props;
     <dt><Icon name="pin" /><span>Location</span></dt>
     <dd>{profile.location}</dd>
   </div>
+  <div>
+    <dt><Icon name="linkedin" /><span>LinkedIn</span></dt>
+    <dd><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">{profile.linkedinLabel}</a></dd>
+  </div>
 </dl>
 
 <style>

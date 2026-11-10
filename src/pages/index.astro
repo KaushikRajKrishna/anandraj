@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FieldMap from '../components/FieldMap.astro';
-import Icon from '../components/Icon.astro';
+import ProfileLinks from '../components/ProfileLinks.astro';
 import HeroArt from '../components/HeroArt.astro';
 import { profile } from '../data/profile';
 import { navigation } from '../data/navigation';
@@ -23,15 +23,12 @@ const pages = navigation.filter((n) => n.href !== '/');
       <p class="designation">{profile.designation} <span aria-hidden="true">·</span> {profile.fellowship}</p>
       <p class="statement">{statement}</p>
       <div class="actions">
-        <a class="btn" href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>
-          <Icon name="download" /> Download CV
-        </a>
-        <a class="btn btn--ghost" href={`mailto:${profile.email}`}><Icon name="mail" /> {profile.email}</a>
+        <ProfileLinks />
       </div>
       </div>
       <figure class="hero-media">
         {profile.photo ? (
-          <img class="portrait" src={profile.photo} alt={`Portrait of ${profile.name}`} width="200" height="260" />
+          <img class="portrait" src={profile.photo} alt={`Portrait of ${profile.name}`} width="300" height="360" />
         ) : (
           <HeroArt />
         )}
@@ -201,7 +198,7 @@ const pages = navigation.filter((n) => n.href !== '/');
 
   @media (min-width: 900px) {
     .hero-photo {
-      grid-template-columns: minmax(0, 1fr) 200px;
+      grid-template-columns: minmax(0, 1fr) 300px;
       gap: clamp(2.5rem, 5vw, 4.5rem);
       align-items: center;
     }
@@ -210,7 +207,7 @@ const pages = navigation.filter((n) => n.href !== '/');
     }
   }
 
-  /* Fixed 200 × 260 image frame */
+  /* Fixed 300 × 360 image frame */
   .hero-media {
     position: relative;
     margin: 0;
@@ -233,25 +230,13 @@ const pages = navigation.filter((n) => n.href !== '/');
     display: block;
   }
 
-  .portrait {
-    /* trims the thin scan border at the image edges */
-    transform: scale(1.04);
-  }
-
   .hero-media :global(.hero-art) {
     border: 0;
     border-radius: 0;
   }
 
   .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
     margin-top: 2.25rem;
-  }
-
-  .actions .btn--ghost {
-    overflow-wrap: anywhere;
   }
 
   /* Questions */

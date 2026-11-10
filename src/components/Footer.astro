@@ -1,6 +1,7 @@
 ---
 import { navigation } from '../data/navigation';
 import { profile } from '../data/profile';
+import Icon from './Icon.astro';
 const year = new Date().getFullYear();
 ---
 
@@ -21,6 +22,9 @@ const year = new Date().getFullYear();
     </nav>
     <div class="f-contact">
       <a href={`mailto:${profile.email}`}>{profile.email}</a>
+      <a class="f-linkedin" href={profile.linkedin} target="_blank" rel="noopener noreferrer">
+        <Icon name="linkedin" /> LinkedIn
+      </a>
       <span>{profile.location}</span>
     </div>
   </div>
@@ -90,6 +94,18 @@ const year = new Date().getFullYear();
     gap: 0.35rem;
     color: var(--muted);
     overflow-wrap: anywhere;
+  }
+
+  .f-linkedin {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .f-linkedin :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    color: var(--accent);
   }
 
   .base {
