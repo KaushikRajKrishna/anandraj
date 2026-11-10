@@ -1,0 +1,34 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import Timeline from '../../components/Timeline.astro';
+import { teaching } from '../../data/experience';
+import { conferences } from '../../data/activities';
+
+const items = teaching.map((e) => ({ period: e.period, title: e.role, subtitle: e.organisation, description: e.description }));
+---
+
+<SubPage
+  title="Talks / Lectures"
+  eyebrow="Academic Engagements · Talks / Lectures"
+  lead="Teaching, live classes and lectures."
+  description="Teaching and lectures by Anand Raj, including live classes for the NPTEL course “Migration, Mobility, and Development”."
+  group="/activities"
+>
+  <Section id="teaching" title="Teaching and Lectures" count={teaching.length}>
+    <Timeline items={items} />
+  </Section>
+
+  <p class="see-also">
+    Papers presented at conferences ({conferences.length}) are listed under
+    <a href="/activities/conferences-and-workshops#conferences">Conferences and Workshops</a>.
+  </p>
+</SubPage>
+
+<style>
+  .see-also {
+    margin-top: 2rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+</style>

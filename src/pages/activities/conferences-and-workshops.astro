@@ -1,0 +1,28 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import DatedList from '../../components/DatedList.astro';
+import { conferences, workshops } from '../../data/activities';
+
+const index = [
+  { id: 'conferences', letter: 'A', label: 'Conference Paper Presentations' },
+  { id: 'workshops', letter: 'B', label: 'Workshops and Academic Programmes' },
+];
+---
+
+<SubPage
+  title="Conferences and Workshops"
+  eyebrow="Academic Engagements · Conferences and Workshops"
+  lead="Papers presented at national and international conferences, and selective workshops and academic programmes attended."
+  description="Conference paper presentations, workshops and academic programmes of Anand Raj, PhD Scholar at IIT Hyderabad."
+  group="/activities"
+  index={index}
+>
+  <Section id="conferences" letter="A" title="Conference Paper Presentations" count={conferences.length}>
+    <DatedList items={conferences} />
+  </Section>
+
+  <Section id="workshops" letter="B" title="Workshops and Academic Programmes" count={workshops.length}>
+    <DatedList items={workshops} />
+  </Section>
+</SubPage>

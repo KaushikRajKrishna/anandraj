@@ -2,6 +2,7 @@
 // Reusable contact block (used on Home and Contact).
 import { profile } from '../data/profile';
 import Icon from './Icon.astro';
+import SocialIcons from './SocialIcons.astro';
 interface Props {
   showAffiliation?: boolean;
 }
@@ -30,13 +31,18 @@ const { showAffiliation = true } = Astro.props;
     <dt><Icon name="pin" /><span>Location</span></dt>
     <dd>{profile.location}</dd>
   </div>
-  <div>
-    <dt><Icon name="linkedin" /><span>LinkedIn</span></dt>
-    <dd><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">{profile.linkedinLabel}</a></dd>
-  </div>
 </dl>
 
+<div class="social-row">
+  <SocialIcons />
+</div>
+
 <style>
+  .social-row {
+    padding-top: 1.1rem;
+    border-top: 1px solid var(--rule);
+  }
+
   .contact-details {
     margin: 0;
     display: grid;

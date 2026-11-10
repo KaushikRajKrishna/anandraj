@@ -13,7 +13,7 @@ export const questions: Question[] = [
   {
     q: 'How do migrant workers in the platform economy resist and organise, and what can their unions learn from movements that won better labour legislation elsewhere?',
     connected: [
-      { label: 'Paper on resistance among bike-based workers in Bengaluru (ISLE, 2024)', href: '/activities#conferences' },
+      { label: 'Paper on resistance among bike-based workers in Bengaluru (ISLE, 2024)', href: '/activities/conferences-and-workshops#conferences' },
       { label: 'Comparative research with TGPWU', href: '/research#tgpwu' },
     ],
   },
@@ -21,14 +21,14 @@ export const questions: Question[] = [
     q: 'Why do global policy frameworks and workers themselves describe platform work so differently?',
     connected: [
       { label: 'Chapter on platform-based gig work and the SDGs (accepted)', href: '/publications#book-chapters' },
-      { label: '“Neoliberal Convergence” (DSA, 2025)', href: '/activities#conferences' },
+      { label: '“Neoliberal Convergence” (DSA, 2025)', href: '/activities/conferences-and-workshops#conferences' },
     ],
   },
   {
     q: 'What happens to citizenship and political representation when people migrate for work?',
     connected: [
-      { label: 'Essays on migrants and the Bihar electoral roll (2025)', href: '/publications#public-scholarship' },
-      { label: 'Migrant Gig Workers, Electoral Politics, and Unequal Development in India (forthcoming)', href: '/publications#public-scholarship' },
+      { label: 'Essays on migrants and the Bihar electoral roll (2025)', href: '/writings#public-scholarship' },
+      { label: 'Migrant Gig Workers, Electoral Politics, and Unequal Development in India (forthcoming)', href: '/writings#public-scholarship' },
     ],
   },
   {

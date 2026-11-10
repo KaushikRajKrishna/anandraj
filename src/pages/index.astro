@@ -3,11 +3,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import FieldMap from '../components/FieldMap.astro';
 import ProfileLinks from '../components/ProfileLinks.astro';
 import HeroArt from '../components/HeroArt.astro';
+import CommunityFeedback from '../components/CommunityFeedback.astro';
 import { profile } from '../data/profile';
-import { navigation } from '../data/navigation';
 import { statement, questions, places, now } from '../data/home';
-
-const pages = navigation.filter((n) => n.href !== '/');
 ---
 
 <BaseLayout
@@ -112,29 +110,8 @@ const pages = navigation.filter((n) => n.href !== '/');
     </div>
   </section>
 
-  <!-- 5. Explore -->
-  <section class="explore" aria-labelledby="h-explore">
-    <div class="container">
-      <div class="sec-head">
-        <p class="eyebrow">Explore</p>
-        <h2 id="h-explore">More on this site</h2>
-      </div>
-      <ol class="page-list">
-        {pages.map((p, i) => (
-          <li>
-            <a href={p.href}>
-              <span class="pg-num">{String(i + 2).padStart(2, '0')}</span>
-              <span class="pg-body">
-                <span class="pg-title">{p.label}</span>
-                <span class="pg-desc">{p.description}</span>
-              </span>
-              <span class="pg-arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
+  <!-- 5. Community Building (feedback) -->
+  <CommunityFeedback />
 </BaseLayout>
 
 <style>
@@ -454,71 +431,4 @@ const pages = navigation.filter((n) => n.href !== '/');
     line-height: 1.6;
   }
 
-  .now + section {
-    border-top: 0;
-  }
-
-  /* Explore */
-  .page-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    column-gap: 3rem;
-  }
-
-  @media (min-width: 760px) {
-    .page-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  .page-list a {
-    display: grid;
-    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
-    gap: 0.75rem;
-    align-items: baseline;
-    padding-block: 1.1rem;
-    border-top: 1px solid var(--rule);
-    text-decoration: none;
-    color: inherit;
-  }
-
-  .pg-num {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .pg-body {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .pg-title {
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-
-  .pg-desc {
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-
-  .pg-arrow {
-    color: var(--accent);
-    transition: transform 0.2s ease;
-  }
-
-  .page-list a:hover .pg-title {
-    color: var(--accent-strong);
-  }
-
-  .page-list a:hover .pg-arrow {
-    transform: translateX(4px);
-  }
 </style>

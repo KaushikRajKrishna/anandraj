@@ -1,85 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PageHeader from '../components/PageHeader.astro';
-import Section from '../components/Section.astro';
-import SectionIndex from '../components/SectionIndex.astro';
-import Citation from '../components/Citation.astro';
-import { publicationSections, allPublications } from '../data/publications';
-import { profile } from '../data/profile';
+import Bibliography from '../components/Bibliography.astro';
+import { academicSections } from '../data/publications';
 
-const index = publicationSections.map((s) => ({ id: s.id, label: s.title, letter: s.letter }));
+const total = academicSections.reduce((n, s) => n + s.items.length, 0);
 ---
 
 <BaseLayout
-  title="Publications & Writings"
-  description="Journal articles, book reviews, book chapters, books, research reports and public writings by Anand Raj."
+  title="Academic Publications"
+  description="Journal articles, book reviews, book chapters, books and research reports by Anand Raj."
 >
   <PageHeader
-    eyebrow="Publications & Writings"
-    title="Bibliography"
-    lead={`Scholarly publications and public writings, listed in reverse chronological order within each section (${allPublications.length} entries).`}
+    eyebrow="My Writings · Academic Publications"
+    title="Academic Publications"
+    lead={`Journal articles, book reviews, book chapters, books and research reports, in reverse chronological order within each section (${total} entries).`}
   />
 
-  <div class="container page-grid">
-    <SectionIndex items={index} />
-
-    <div>
-      {publicationSections.map((section) => (
-        <Section id={section.id} letter={section.letter} title={section.title} count={section.items.length}>
-          <ol class="bib">
-            {section.items.map((pub) => (
-              <li id={pub.id}>
-                <Citation pub={pub} />
-              </li>
-            ))}
-          </ol>
-        </Section>
-      ))}
-
-      <p class="note">
-        Statuses such as <em>accepted</em> and <em>forthcoming</em> are as listed in the current CV. For a complete
-        record, <a href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>download the CV</a>.
-      </p>
-    </div>
-  </div>
+  <Bibliography sections={academicSections}>
+    <p class="sibling-link" slot="after">
+      <a class="text-link" href="/writings">Blogs / Writings <span aria-hidden="true">→</span></a>
+    </p>
+  </Bibliography>
 </BaseLayout>
-
-<style>
-  .bib {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  .bib li {
-    padding-block: 0.9rem;
-    border-bottom: 1px solid var(--rule);
-    scroll-margin-top: calc(var(--header-h) + 1.5rem);
-  }
-
-  /* Hanging indent, as in a printed bibliography */
-  .bib li :global(.citation) {
-    padding-left: 1.75rem;
-    text-indent: -1.75rem;
-  }
-
-  .bib li:first-child {
-    padding-top: 0.25rem;
-  }
-
-  .bib li:last-child {
-    border-bottom: 0;
-  }
-
-  .bib li:target {
-    background: var(--accent-soft);
-  }
-
-  .note {
-    margin-top: 3rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--rule);
-    font-size: 0.9rem;
-    color: var(--muted);
-  }
-</style>

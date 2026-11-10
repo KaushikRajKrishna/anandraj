@@ -10,7 +10,8 @@ export const profile = {
   phoneHref: 'tel:+919205231252',
   location: 'Hyderabad, India',
   linkedin: 'https://www.linkedin.com/in/anand-raj-238131290',
-  linkedinLabel: 'View LinkedIn profile',
+  // TODO: replace with the full Instagram profile URL, e.g. 'https://www.instagram.com/username/'
+  instagram: '' as string,
   cv: '/files/Anand-Raj-CV.pdf',
   photo: '/images/anand-raj.jpeg' as string,
   fellowship: 'Ministry of Education (MoE) Fellow',
@@ -20,9 +21,9 @@ export const profile = {
 // Academic and professional profiles (Home page bar).
 export const academicProfiles = [
   { label: 'Google Scholar', href: 'https://scholar.google.com/citations?hl=en&user=Q_Pl2bMAAAAJ' },
-  // TODO: replace with the full ORCID iD URL, e.g. https://orcid.org/0000-0000-0000-0000
-  { label: 'ORCID', href: 'https://orcid.org/' },
+  { label: 'ORCID', href: 'https://orcid.org/0009-0000-1757-7090' },
   { label: 'Web of Science', href: 'https://www.webofscience.com/wos/author/record/RJC-5596-2026' },
+  { label: 'ResearchGate', href: 'https://www.researchgate.net/profile/Anand-Raj-56' },
 ];
 
 // Extended biography used on the About page.

@@ -1,0 +1,133 @@
+---
+// Overview of the Academic Engagements group (kept so /activities still resolves).
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import { navigation } from '../../data/navigation';
+import { conferences, workshops, awards, certificates, responsibilities } from '../../data/activities';
+import { teaching } from '../../data/experience';
+
+const group = navigation.find((n) => n.href === '/activities');
+const pages = group?.children ?? [];
+
+const counts: Record<string, string> = {
+  '/activities/conferences-and-workshops': `${conferences.length} presentations · ${workshops.length} workshops`,
+  '/activities/awards-and-grants': `${awards.length} entries`,
+  '/activities/certificates-and-courses': `${certificates.length} courses`,
+  '/activities/responsibilities-and-leadership': `${responsibilities.length} roles`,
+  '/activities/talks-and-lectures': `${teaching.length} ${teaching.length === 1 ? 'entry' : 'entries'}`,
+};
+---
+
+<BaseLayout
+  title="Academic Engagements"
+  description="Conferences, workshops, awards, certificate courses, responsibilities and lectures of Anand Raj, PhD Scholar at IIT Hyderabad."
+>
+  <PageHeader
+    eyebrow="Academic Engagements"
+    title="Academic Engagements"
+    lead="Conferences and workshops, awards, courses, institutional responsibilities, and teaching."
+  />
+
+  <div class="container wrap">
+    <ol class="dir">
+      {pages.map((p, i) => (
+        <li>
+          <a href={p.href}>
+            <span class="n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="body">
+              <span class="t">{p.label}</span>
+              <span class="d">{p.description}</span>
+            </span>
+            <span class="c">{counts[p.href]}</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
+</BaseLayout>
+
+<style>
+  .wrap {
+    max-width: calc(56rem + 2 * var(--gutter));
+    padding-bottom: 5rem;
+  }
+
+  .dir {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+
+  a {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: 0.25rem 1rem;
+    align-items: baseline;
+    padding-block: 1.25rem;
+    border-bottom: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media (min-width: 720px) {
+    a {
+      grid-template-columns: 2.5rem minmax(0, 1fr) auto auto;
+    }
+  }
+
+  .n {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .t {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .d {
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  .c {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 719px) {
+    .c {
+      grid-column: 2;
+    }
+    .arrow {
+      grid-column: 3;
+      grid-row: 1;
+    }
+  }
+
+  .arrow {
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+
+  a:hover .t {
+    color: var(--accent-strong);
+  }
+
+  a:hover .arrow {
+    transform: translateX(4px);
+  }
+</style>

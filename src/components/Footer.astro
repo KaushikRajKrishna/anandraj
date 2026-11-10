@@ -1,5 +1,5 @@
 ---
-import { navigation } from '../data/navigation';
+import { allPages } from '../data/navigation';
 import { profile } from '../data/profile';
 import Icon from './Icon.astro';
 const year = new Date().getFullYear();
@@ -16,7 +16,7 @@ const year = new Date().getFullYear();
     </div>
     <nav aria-label="Footer">
       <ul>
-        {navigation.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+        {allPages.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
         <li><a href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>Download CV</a></li>
       </ul>
     </nav>

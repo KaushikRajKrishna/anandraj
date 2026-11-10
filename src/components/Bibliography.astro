@@ -1,0 +1,84 @@
+---
+// Lettered bibliography sections with a sticky "On this page" index.
+// Shared by the Academic Publications and Blogs / Writings pages.
+import Section from './Section.astro';
+import SectionIndex from './SectionIndex.astro';
+import Citation from './Citation.astro';
+import type { PublicationSection } from '../data/publications';
+import { profile } from '../data/profile';
+
+interface Props {
+  sections: PublicationSection[];
+}
+const { sections } = Astro.props;
+const index = sections.map((s) => ({ id: s.id, label: s.title, letter: s.letter }));
+---
+
+<div class="container page-grid">
+  <SectionIndex items={index} />
+
+  <div>
+    {sections.map((section) => (
+      <Section id={section.id} letter={section.letter} title={section.title} count={section.items.length}>
+        <ol class="bib">
+          {section.items.map((pub) => (
+            <li id={pub.id}>
+              <Citation pub={pub} />
+            </li>
+          ))}
+        </ol>
+      </Section>
+    ))}
+
+    <slot name="after" />
+
+    <p class="note">
+      Statuses such as <em>accepted</em> and <em>forthcoming</em> are as listed in the current CV. For a complete
+      record, <a href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>download the CV</a>.
+    </p>
+  </div>
+</div>
+
+<style>
+  .bib {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .bib li {
+    padding-block: 0.9rem;
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: calc(var(--header-h) + 1.5rem);
+  }
+
+  /* Hanging indent, as in a printed bibliography */
+  .bib li :global(.citation) {
+    padding-left: 1.75rem;
+    text-indent: -1.75rem;
+  }
+
+  .bib li:first-child {
+    padding-top: 0.25rem;
+  }
+
+  .bib li:last-child {
+    border-bottom: 0;
+  }
+
+  .bib li:target {
+    background: var(--accent-soft);
+  }
+
+  .note {
+    margin-top: 3rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  :global(.sibling-link) {
+    margin-top: 2.5rem;
+  }
+</style>

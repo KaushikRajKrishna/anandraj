@@ -1,0 +1,46 @@
+---
+// Shell for pages inside a dropdown group: header, optional "On this page" index,
+// and content slot.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from './PageHeader.astro';
+import SectionIndex from './SectionIndex.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  eyebrow: string;
+  lead?: string;
+  /** href of the parent menu item, e.g. '/activities' */
+  group: string;
+  index?: { id: string; label: string; letter?: string }[];
+}
+const { title, description, eyebrow, lead, index } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <PageHeader eyebrow={eyebrow} title={title} lead={lead} />
+
+  {index && index.length > 1 ? (
+    <div class="container page-grid">
+      <SectionIndex items={index} />
+      <div>
+        <slot />
+      </div>
+    </div>
+  ) : (
+    <div class="container single">
+      <slot />
+    </div>
+  )}
+</BaseLayout>
+
+<style>
+  .single {
+    padding-bottom: 5rem;
+  }
+
+  /* Left-aligned with the page heading, but kept to a readable width */
+  .single > :global(*) {
+    max-width: 52rem;
+  }
+</style>

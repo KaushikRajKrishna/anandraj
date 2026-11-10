@@ -1,0 +1,70 @@
+---
+// Brand logo buttons (LinkedIn, Instagram) that open the profile in a new tab.
+// URLs come from src/data/profile.ts. Instagram falls back to instagram.com until its profile URL is set.
+import { profile } from '../data/profile';
+
+const links = [
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    href: profile.linkedin,
+    svg: '<path fill="currentColor" d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45z"/>',
+  },
+  {
+    id: 'instagram',
+    label: 'Instagram',
+    href: profile.instagram || 'https://www.instagram.com/',
+    svg: '<rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.25" fill="currentColor"/>',
+  },
+];
+---
+
+<ul class="social">
+  {links.map((l) => (
+    <li>
+      <a class={`s-${l.id}`} href={l.href} target="_blank" rel="noopener noreferrer" aria-label={`${profile.name} on ${l.label} (opens in a new tab)`} title={l.label}>
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" set:html={l.svg} />
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  .social {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+
+  a {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  a:hover {
+    transform: translateY(-2px);
+    color: #fff;
+  }
+
+  .s-linkedin:hover {
+    background: #0a66c2;
+  }
+
+  .s-instagram:hover {
+    background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+  }
+
+  svg {
+    width: 1.15rem;
+    height: 1.15rem;
+  }
+</style>

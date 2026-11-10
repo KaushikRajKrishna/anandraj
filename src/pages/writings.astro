@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Bibliography from '../components/Bibliography.astro';
+import { writingSections } from '../data/publications';
+
+const total = writingSections.reduce((n, s) => n + s.items.length, 0);
+---
+
+<BaseLayout
+  title="Blogs / Writings"
+  description="Public scholarship, essays and other academic writings by Anand Raj on migration, gig work and democracy."
+>
+  <PageHeader
+    eyebrow="My Writings · Blogs / Writings"
+    title="Blogs / Writings"
+    lead={`Public scholarship, essays and other academic writings, in reverse chronological order within each section (${total} entries).`}
+  />
+
+  <Bibliography sections={writingSections}>
+    <p class="sibling-link" slot="after">
+      <a class="text-link" href="/publications">Academic Publications <span aria-hidden="true">→</span></a>
+    </p>
+  </Bibliography>
+</BaseLayout>

@@ -6,6 +6,7 @@ import Icon from './Icon.astro';
 const normalise = (p: string) => (p.length > 1 ? p.replace(/\/+$/, '') : p);
 const current = normalise(Astro.url.pathname);
 const isActive = (href: string) => normalise(href) === current;
+const inGroup = (hrefs: string[]) => hrefs.map(normalise).includes(current);
 ---
 
 <header class="site-header" transition:persist="site-header">
@@ -22,13 +23,37 @@ const isActive = (href: string) => normalise(href) === current;
 
     <nav id="site-nav" class="nav" aria-label="Main">
       <ul>
-        {navigation.map((item) => (
-          <li>
-            <a href={item.href} data-nav={normalise(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
-              {item.label}
-            </a>
-          </li>
-        ))}
+        {navigation.map((item) =>
+          item.children ? (
+            <li class="has-sub">
+              <button
+                type="button"
+                class:list={['parent', { 'is-active': inGroup([item.href, ...item.children.map((c) => c.href)]) }]}
+                aria-expanded="false"
+                aria-controls={`sub-${normalise(item.href).replace(/\W/g, '') || 'menu'}`}
+                data-group={[item.href, ...item.children.map((c) => c.href)].map(normalise).join(' ')}
+              >
+                {item.label}
+                <svg class="chev" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" /></svg>
+              </button>
+              <ul class="sub" id={`sub-${normalise(item.href).replace(/\W/g, '') || 'menu'}`} aria-label={item.label}>
+                {item.children.map((child) => (
+                  <li>
+                    <a href={child.href} data-nav={normalise(child.href)} aria-current={isActive(child.href) ? 'page' : undefined}>
+                      {child.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a href={item.href} data-nav={normalise(item.href)} aria-current={isActive(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          )
+        )}
       </ul>
       <a class="btn cv-btn" href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>
         <Icon name="download" /> Download CV
@@ -50,6 +75,45 @@ const isActive = (href: string) => normalise(href) === current;
       if (a.dataset.nav === path) a.setAttribute('aria-current', 'page');
       else a.removeAttribute('aria-current');
     });
+    // Highlight a dropdown parent when one of its pages is open.
+    header.querySelectorAll<HTMLButtonElement>('[data-group]').forEach((b) => {
+      b.classList.toggle('is-active', (b.dataset.group ?? '').split(' ').includes(path));
+    });
+
+    // Dropdowns: the parent is a button that only opens/closes its menu (never navigates).
+    const closeAll = (except?: Element) => {
+      header.querySelectorAll<HTMLElement>('.has-sub.is-expanded').forEach((li) => {
+        if (li === except) return;
+        li.classList.remove('is-expanded');
+        li.querySelector('.parent')?.setAttribute('aria-expanded', 'false');
+      });
+    };
+    closeAll();
+    const focused = document.activeElement;
+    if (focused instanceof HTMLElement && focused.closest('.has-sub')) focused.blur();
+
+    if (!header.dataset.subBound) {
+      header.dataset.subBound = '1';
+      header.querySelectorAll<HTMLButtonElement>('.has-sub > .parent').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const li = btn.parentElement!;
+          closeAll(li);
+          const open = li.classList.toggle('is-expanded');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+      });
+      document.addEventListener('click', (e) => {
+        if (!(e.target as Element).closest('.has-sub')) closeAll();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const openLi = header.querySelector('.has-sub.is-expanded');
+        if (openLi) {
+          closeAll();
+          openLi.querySelector<HTMLButtonElement>('.parent')?.focus();
+        }
+      });
+    }
 
     // Close the mobile menu after navigating.
     header.classList.remove('is-open');
@@ -179,9 +243,131 @@ const isActive = (href: string) => normalise(href) === current;
     color: var(--ink);
   }
 
-  .nav ul a[aria-current='page']::after {
+  .nav ul a[aria-current='page']::after,
+  .parent.is-active::after {
     transform: scaleX(1);
     opacity: 1;
+  }
+
+  /* ---- Dropdown ("My Writings") ---- */
+  .has-sub {
+    position: relative;
+  }
+
+  /* Parent is a <button> styled like the other menu links */
+  .parent {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.5rem 0.6rem;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--ink-2);
+    white-space: nowrap;
+    cursor: pointer;
+  }
+
+  .parent::after {
+    content: '';
+    position: absolute;
+    left: 0.6rem;
+    right: 0.6rem;
+    bottom: 0.2rem;
+    height: 1.5px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+  }
+
+  .parent:hover,
+  .parent.is-active,
+  .has-sub.is-expanded > .parent {
+    color: var(--ink);
+  }
+
+  .parent:hover::after {
+    transform: scaleX(1);
+    opacity: 0.4;
+  }
+
+  .chev {
+    width: 0.7rem;
+    height: 0.7rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.2s ease;
+  }
+
+  .nav ul.sub {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 15rem;
+    flex-direction: column;
+    gap: 0;
+    padding: 0.4rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    box-shadow: 0 14px 30px -14px rgb(21 35 61 / 0.28);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  }
+
+  /* invisible bridge so the menu stays open while the pointer moves down */
+  .nav ul.sub::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8px;
+    height: 8px;
+  }
+
+  .has-sub:hover > ul.sub,
+  .has-sub.is-expanded > ul.sub,
+  .has-sub > ul.sub:focus-within {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .has-sub:hover .chev,
+  .has-sub.is-expanded .chev {
+    transform: rotate(180deg);
+  }
+
+  .nav ul.sub a {
+    padding: 0.6rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+  }
+
+  .nav ul.sub a::after {
+    display: none;
+  }
+
+  .nav ul.sub a:hover {
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+  }
+
+  .nav ul.sub a[aria-current='page'] {
+    color: var(--accent-strong);
+    font-weight: 600;
+    box-shadow: inset 2px 0 0 var(--accent);
   }
 
   .cv-btn {
@@ -267,6 +453,70 @@ const isActive = (href: string) => normalise(href) === current;
 
     .nav ul a[aria-current='page']::after {
       transform: translate(-0.75rem, -50%) scaleY(1);
+    }
+
+    /* Dropdown becomes an indented group that expands on tap */
+    .parent {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      font-size: 1rem;
+      border-bottom: 1px solid var(--rule);
+      text-align: left;
+    }
+
+    .parent::after {
+      display: none;
+    }
+
+    .chev {
+      width: 0.85rem;
+      height: 0.85rem;
+    }
+
+    .has-sub:hover .chev {
+      transform: none;
+    }
+
+    .has-sub.is-expanded .chev {
+      transform: rotate(180deg);
+    }
+
+    .nav ul.sub {
+      position: static;
+      min-width: 0;
+      padding: 0 0 0 1rem;
+      background: none;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      display: none;
+    }
+
+    .has-sub.is-expanded > ul.sub {
+      display: flex;
+    }
+
+    .nav ul.sub::before {
+      display: none;
+    }
+
+    .nav ul.sub a {
+      padding: 0.7rem 0;
+      font-size: 0.95rem;
+      border-radius: 0;
+    }
+
+    .nav ul.sub a:hover {
+      background: none;
+    }
+
+    .nav ul.sub a[aria-current='page'] {
+      box-shadow: none;
     }
 
     .cv-btn {

@@ -1,0 +1,18 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import DatedList from '../../components/DatedList.astro';
+import { certificates } from '../../data/activities';
+---
+
+<SubPage
+  title="Certificates and Courses"
+  eyebrow="Academic Engagements · Certificates and Courses"
+  lead="Certificate courses in research methodology, academic writing, research ethics, and data and gig work."
+  description="Certificate courses completed by Anand Raj in qualitative research, academic writing, research ethics and gig work."
+  group="/activities"
+>
+  <Section id="certificates" title="Certificate Courses" count={certificates.length}>
+    <DatedList items={certificates} />
+  </Section>
+</SubPage>

@@ -24,6 +24,8 @@ export interface Publication {
 
 export interface PublicationSection {
   id: string;
+  /** Which page lists this section */
+  group: 'academic' | 'writings';
   letter: string;
   title: string;
   items: Publication[];
@@ -32,6 +34,7 @@ export interface PublicationSection {
 export const publicationSections: PublicationSection[] = [
   {
     id: 'journal-articles',
+    group: 'academic',
     letter: 'A',
     title: 'Journal Articles and Book Reviews',
     items: [
@@ -73,6 +76,7 @@ export const publicationSections: PublicationSection[] = [
   },
   {
     id: 'book-chapters',
+    group: 'academic',
     letter: 'B',
     title: 'Book Chapters',
     items: [
@@ -91,6 +95,7 @@ export const publicationSections: PublicationSection[] = [
   },
   {
     id: 'books-reports',
+    group: 'academic',
     letter: 'C',
     title: 'Books and Research Reports',
     items: [
@@ -116,7 +121,8 @@ export const publicationSections: PublicationSection[] = [
   },
   {
     id: 'public-scholarship',
-    letter: 'D',
+    group: 'writings',
+    letter: 'A',
     title: 'Public Scholarship and Essays',
     items: [
       {
@@ -150,7 +156,8 @@ export const publicationSections: PublicationSection[] = [
   },
   {
     id: 'other-writings',
-    letter: 'E',
+    group: 'writings',
+    letter: 'B',
     title: 'Other Academic Writings',
     items: [
       {
@@ -175,3 +182,8 @@ export const publicationSections: PublicationSection[] = [
 ];
 
 export const allPublications = publicationSections.flatMap((s) => s.items);
+
+/** Academic Publications page (/publications) */
+export const academicSections = publicationSections.filter((s) => s.group === 'academic');
+/** Blogs / Writings page (/writings) */
+export const writingSections = publicationSections.filter((s) => s.group === 'writings');
