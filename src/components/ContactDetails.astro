@@ -1,0 +1,83 @@
+---
+// Reusable contact block (used on Home and Contact).
+import { profile } from '../data/profile';
+import Icon from './Icon.astro';
+interface Props {
+  showAffiliation?: boolean;
+}
+const { showAffiliation = true } = Astro.props;
+---
+
+<dl class="contact-details">
+  {showAffiliation && (
+    <div>
+      <dt><Icon name="building" /><span>Affiliation</span></dt>
+      <dd>
+        {profile.department}<br />
+        {profile.institution}
+      </dd>
+    </div>
+  )}
+  <div>
+    <dt><Icon name="mail" /><span>Email</span></dt>
+    <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
+  </div>
+  <div>
+    <dt><Icon name="phone" /><span>Phone</span></dt>
+    <dd><a href={profile.phoneHref}>{profile.phone}</a></dd>
+  </div>
+  <div>
+    <dt><Icon name="pin" /><span>Location</span></dt>
+    <dd>{profile.location}</dd>
+  </div>
+</dl>
+
+<style>
+  .contact-details {
+    margin: 0;
+    display: grid;
+    gap: 0;
+  }
+
+  .contact-details > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+    padding-block: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .contact-details > div:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: 560px) {
+    .contact-details > div {
+      grid-template-columns: 9rem minmax(0, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  dt {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  dt :global(svg) {
+    width: 1rem;
+    height: 1rem;
+    color: var(--accent);
+  }
+
+  dd {
+    margin: 0;
+    color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+</style>

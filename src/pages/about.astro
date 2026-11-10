@@ -1,0 +1,198 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Section from '../components/Section.astro';
+import SectionIndex from '../components/SectionIndex.astro';
+import Timeline from '../components/Timeline.astro';
+import { biography, professionalProfile, profile } from '../data/profile';
+import { education } from '../data/education';
+
+const educationTimeline = education.map((e) => ({
+  period: e.period,
+  title: e.degree,
+  subtitle: [e.institution, e.place].filter(Boolean).join(', '),
+  detail: e.detail,
+}));
+
+// Academic journey: education and positions merged, most recent first.
+const journey = [
+  { period: 'Jan 2026 – Apr 2026', title: 'Teaching Assistant, NPTEL', subtitle: 'Course “Migration, Mobility, and Development”, IIT Hyderabad' },
+  { period: 'Sept 2024 – Present', title: 'Volunteer Researcher', subtitle: 'Telangana Gig and Platform Workers Union' },
+  { period: 'July 2024', title: 'Began PhD, Department of Liberal Arts', subtitle: 'IIT Hyderabad, with the Ministry of Education Fellowship' },
+  { period: 'April – May 2024', title: 'Research Intern', subtitle: 'Centre for Sustainable Employment, Azim Premji University' },
+  { period: 'Aug 2023 – May 2024', title: 'Urban Fellow', subtitle: 'Indian Institute for Human Settlements' },
+  { period: 'June 2023', title: 'Qualified UGC NET for Assistant Professor', subtitle: 'University Grants Commission' },
+  { period: 'April – Oct 2023', title: 'Research Associate', subtitle: 'V.V. Giri National Labour Institute, Govt. of India' },
+  { period: 'July 2021', title: 'M.A. Political Science, Rank 1', subtitle: 'P.G.D.A.V. College, University of Delhi' },
+  { period: 'Dec 2019 – Feb 2020', title: 'Intern, Privileges Committee', subtitle: 'Delhi Legislative Assembly' },
+  { period: 'Aug 2016', title: 'Began B.A. in History and Political Science', subtitle: 'University of Delhi' },
+];
+
+const index = [
+  { id: 'biography', label: 'Biography' },
+  { id: 'education', label: 'Education' },
+  { id: 'journey', label: 'Academic Journey' },
+  { id: 'background', label: 'Academic Background' },
+  { id: 'profile', label: 'Professional Profile' },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="Biography, education and academic journey of Anand Raj, PhD Scholar in the Department of Liberal Arts, IIT Hyderabad."
+>
+  <PageHeader
+    eyebrow="About"
+    title="Biography and academic journey"
+    lead={`${profile.designation}, ${profile.department}, ${profile.institution}.`}
+  />
+
+  <div class="container page-grid">
+    <SectionIndex items={index} />
+
+    <div>
+      <Section id="biography" title="Biography">
+        <div class="prose bio">
+          {biography.map((p) => <p>{p}</p>)}
+        </div>
+      </Section>
+
+      <Section id="education" title="Education">
+        <Timeline items={educationTimeline} />
+      </Section>
+
+      <Section id="journey" title="Academic Journey" intro="Key milestones in study, research and teaching, most recent first.">
+        <Timeline items={journey} />
+      </Section>
+
+      <Section id="background" title="Academic Background">
+        <div class="prose">
+          <p>
+            My academic training spans <strong>history</strong>, <strong>political science</strong> and
+            <strong>urban studies</strong>. Undergraduate study in History and Political Science and a Master’s in
+            Political Science at the University of Delhi grounded me in political theory, Indian politics and
+            historical method. The Urban Fellows Programme at IIHS added interdisciplinary training in urban
+            research through coursework, fieldwork and collaborative projects.
+          </p>
+          <p>
+            Methodologically, my work draws on archival research (developed at the V.V. Giri National Labour
+            Institute), survey and fieldwork (Delhi Legislative Assembly; IIHS), quantitative data analysis (State of
+            Working India Report, Azim Premji University) and qualitative research methods, complemented by
+            specialised workshops on labour history, migration and informality, the measurement of exclusion and
+            inequality, digitalisation, and urban mixed methods.
+          </p>
+        </div>
+        <div class="bg-grid">
+          <div>
+            <h3>Disciplines</h3>
+            <p>History · Political Science · Urban Studies · Liberal Arts</p>
+          </div>
+          <div>
+            <h3>Methods</h3>
+            <p>Archival research · Fieldwork and surveys · Qualitative analysis · Data analysis and visualisation · GIS</p>
+          </div>
+          <div>
+            <h3>Institutions</h3>
+            <p>University of Delhi · Indian Institute for Human Settlements · IIT Hyderabad</p>
+          </div>
+        </div>
+      </Section>
+
+      <Section id="profile" title="Professional Profile">
+        <dl class="profile-table">
+          {professionalProfile.map((row) => (
+            <div>
+              <dt>{row.label}</dt>
+              <dd>{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+        <p class="next">
+          <a class="text-link" href="/research">Continue to Research <span aria-hidden="true">→</span></a>
+        </p>
+      </Section>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .bio p:first-child::first-letter {
+    font-family: var(--serif);
+    float: left;
+    font-size: 3.4rem;
+    line-height: 0.9;
+    padding: 0.3rem 0.5rem 0 0;
+    color: var(--accent-strong);
+  }
+
+  .prose strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .bg-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (min-width: 720px) {
+    .bg-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  .bg-grid > div {
+    border-top: 2px solid var(--accent);
+    background: var(--surface);
+    padding: 1rem 1.1rem;
+  }
+
+  .bg-grid h3 {
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .bg-grid p {
+    margin: 0;
+    font-size: 0.92rem;
+  }
+
+  .profile-table {
+    margin: 0;
+  }
+
+  .profile-table > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.1rem;
+    padding-block: 0.75rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  @media (min-width: 640px) {
+    .profile-table > div {
+      grid-template-columns: 11rem minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .profile-table dt {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.15rem;
+  }
+
+  .profile-table dd {
+    margin: 0;
+    color: var(--ink);
+  }
+
+  .next {
+    margin-top: 2rem;
+  }
+</style>

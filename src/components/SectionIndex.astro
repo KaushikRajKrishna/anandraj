@@ -1,0 +1,127 @@
+---
+// Sticky "On this page" index for long pages (desktop), collapsible chip list on mobile.
+interface Props {
+  items: { id: string; label: string; letter?: string }[];
+}
+const { items } = Astro.props;
+---
+
+<aside class="section-index" aria-label="On this page">
+  <p class="label">On this page</p>
+  <ol>
+    {items.map((item) => (
+      <li>
+        <a href={`#${item.id}`} data-target={item.id}>
+          {item.letter && <span class="l">{item.letter}</span>}
+          <span>{item.label}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+</aside>
+
+<script>
+  function initIndex() {
+    const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('.section-index a[data-target]'));
+    if (!links.length || !('IntersectionObserver' in window)) return;
+    const map = new Map(links.map((a) => [a.dataset.target!, a]));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            links.forEach((l) => l.classList.remove('is-active'));
+            map.get(entry.target.id)?.classList.add('is-active');
+          }
+        });
+      },
+      { rootMargin: '-25% 0px -65% 0px' }
+    );
+    map.forEach((_, id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
+  }
+  document.addEventListener('astro:page-load', initIndex);
+</script>
+
+<style>
+  .section-index {
+    font-size: 0.875rem;
+  }
+
+  .label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  a {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+    text-decoration: none;
+    color: var(--ink-2);
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 0.25rem 0.75rem;
+    line-height: 1.4;
+  }
+
+  .l {
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 0.8rem;
+  }
+
+  a:hover,
+  a.is-active {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+
+  @media (min-width: 960px) {
+    .section-index {
+      position: sticky;
+      top: calc(var(--header-h) + 1.5rem);
+      align-self: start;
+    }
+
+    ol {
+      flex-direction: column;
+      gap: 0;
+      border-left: 1px solid var(--rule);
+    }
+
+    a {
+      border: 0;
+      background: none;
+      border-radius: 0;
+      padding: 0.4rem 0 0.4rem 1rem;
+      margin-left: -1px;
+      border-left: 2px solid transparent;
+    }
+
+    a:hover {
+      border-left-color: var(--rule-strong);
+    }
+
+    a.is-active {
+      border-left-color: var(--accent);
+      color: var(--ink);
+    }
+  }
+</style>

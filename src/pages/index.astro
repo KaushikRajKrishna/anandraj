@@ -1,0 +1,539 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import FieldMap from '../components/FieldMap.astro';
+import Icon from '../components/Icon.astro';
+import HeroArt from '../components/HeroArt.astro';
+import { profile } from '../data/profile';
+import { navigation } from '../data/navigation';
+import { statement, questions, places, now } from '../data/home';
+
+const pages = navigation.filter((n) => n.href !== '/');
+---
+
+<BaseLayout
+  title="Home"
+  description="Anand Raj is a PhD Scholar in the Department of Liberal Arts at IIT Hyderabad, studying work, migration and the city in India, with a focus on gig and platform workers."
+>
+  <!-- 1. Statement -->
+  <section class="hero">
+    <div class="container hero-photo">
+      <div>
+      <p class="eyebrow">{profile.department} · {profile.institution}</p>
+      <h1>{profile.name}</h1>
+      <p class="designation">{profile.designation} <span aria-hidden="true">·</span> {profile.fellowship}</p>
+      <p class="statement">{statement}</p>
+      <div class="actions">
+        <a class="btn" href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>
+          <Icon name="download" /> Download CV
+        </a>
+        <a class="btn btn--ghost" href={`mailto:${profile.email}`}><Icon name="mail" /> {profile.email}</a>
+      </div>
+      </div>
+      <figure class="hero-media">
+        {profile.photo ? (
+          <img class="portrait" src={profile.photo} alt={`Portrait of ${profile.name}`} width="200" height="260" />
+        ) : (
+          <HeroArt />
+        )}
+      </figure>
+    </div>
+  </section>
+
+  <!-- 2. Questions -->
+  <section class="questions" aria-labelledby="h-questions">
+    <div class="container">
+      <div class="sec-head">
+        <p class="eyebrow">Lines of inquiry</p>
+        <h2 id="h-questions">Questions I am working through</h2>
+      </div>
+      <ol class="q-list">
+        {questions.map((item, i) => (
+          <li>
+            <span class="q-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <div>
+              <p class="q">{item.q}</p>
+              <ul class="q-links" aria-label="Connected work">
+                {item.connected.map((c) => (
+                  <li><a href={c.href}>{c.label}</a></li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- 3. Places -->
+  <section class="places" aria-labelledby="h-places">
+    <div class="container places-grid">
+      <div>
+        <div class="sec-head">
+          <p class="eyebrow">Sites</p>
+          <h2 id="h-places">Where the research is situated</h2>
+          <p class="sec-lead">
+            From the source regions of migration to the cities where migrants find work, my research has moved
+            between four places.
+          </p>
+        </div>
+        <ol class="place-list">
+          {places.map((p, i) => (
+            <li>
+              <span class="p-num">{i + 1}</span>
+              <div>
+                <h3>{p.name} <span class="region">{p.region}</span></h3>
+                <ul>
+                  {p.work.map((w) => <li>{w}</li>)}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="map-col">
+        <FieldMap places={places} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Now -->
+  <section class="now" aria-labelledby="h-now">
+    <div class="container now-grid">
+      <div class="sec-head">
+        <p class="eyebrow">Now</p>
+        <h2 id="h-now">Current work</h2>
+        <p class="asof">As of {now.asOf}</p>
+      </div>
+      <dl class="now-list">
+        {now.items.map((n) => (
+          <div>
+            <dt>{n.label}</dt>
+            <dd>{n.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <!-- 5. Explore -->
+  <section class="explore" aria-labelledby="h-explore">
+    <div class="container">
+      <div class="sec-head">
+        <p class="eyebrow">Explore</p>
+        <h2 id="h-explore">More on this site</h2>
+      </div>
+      <ol class="page-list">
+        {pages.map((p, i) => (
+          <li>
+            <a href={p.href}>
+              <span class="pg-num">{String(i + 2).padStart(2, '0')}</span>
+              <span class="pg-body">
+                <span class="pg-title">{p.label}</span>
+                <span class="pg-desc">{p.description}</span>
+              </span>
+              <span class="pg-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  section {
+    padding-block: clamp(3rem, 7vw, 5rem);
+  }
+
+  section + section {
+    border-top: 1px solid var(--rule);
+  }
+
+  .sec-head {
+    margin-bottom: 2rem;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.6vw, 2.2rem);
+    font-weight: 500;
+  }
+
+  .sec-lead {
+    margin: 0.75rem 0 0;
+    color: var(--muted);
+    max-width: 36rem;
+  }
+
+  /* Hero */
+  .hero {
+    padding-block: clamp(3rem, 9vw, 6.5rem) clamp(3rem, 7vw, 5rem);
+  }
+
+  h1 {
+    font-size: clamp(2.6rem, 7vw, 4.25rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .designation {
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+    font-style: italic;
+    color: var(--accent-strong);
+    margin: 0.5rem 0 0;
+  }
+
+  .statement {
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 3.4vw, 2.15rem);
+    line-height: 1.38;
+    color: var(--ink);
+    max-width: 44ch;
+    margin: clamp(1.75rem, 4vw, 2.5rem) 0 0;
+    padding-left: clamp(1rem, 2.5vw, 1.5rem);
+    border-left: 3px solid var(--accent);
+  }
+
+  .hero-photo {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .hero-photo {
+      grid-template-columns: minmax(0, 1fr) 200px;
+      gap: clamp(2.5rem, 5vw, 4.5rem);
+      align-items: center;
+    }
+    .hero-photo .statement {
+      max-width: 36ch;
+    }
+  }
+
+  /* Fixed 200 × 260 image frame */
+  .hero-media {
+    position: relative;
+    margin: 0;
+    width: 300px;
+    height: 360px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .portrait,
+  .hero-media :global(.hero-art) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    display: block;
+  }
+
+  .portrait {
+    /* trims the thin scan border at the image edges */
+    transform: scale(1.04);
+  }
+
+  .hero-media :global(.hero-art) {
+    border: 0;
+    border-radius: 0;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+
+  .actions .btn--ghost {
+    overflow-wrap: anywhere;
+  }
+
+  /* Questions */
+  .questions {
+    background: var(--surface);
+  }
+
+  .q-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  @media (min-width: 860px) {
+    .q-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 4rem;
+    }
+  }
+
+  .q-list > li {
+    display: grid;
+    grid-template-columns: 2.75rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .q-num {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: var(--accent);
+    line-height: 1.3;
+  }
+
+  .q {
+    font-family: var(--serif);
+    font-size: clamp(1.12rem, 2vw, 1.28rem);
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0 0 0.85rem;
+  }
+
+  .q-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
+  }
+
+  .q-links li {
+    position: relative;
+    padding-left: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .q-links li::before {
+    content: '↳';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+
+  .q-links a {
+    color: var(--ink-2);
+    text-decoration-color: var(--rule-strong);
+  }
+
+  .q-links a:hover {
+    color: var(--accent-strong);
+  }
+
+  /* Places */
+  .places-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 900px) {
+    .places-grid {
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  .place-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .place-list > li {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: 0.75rem;
+    padding-block: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .p-num {
+    display: grid;
+    place-items: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 0.1rem;
+  }
+
+  .place-list h3 {
+    font-size: 1.15rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .region {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .place-list ul {
+    margin: 0.35rem 0 0;
+    padding-left: 1rem;
+    font-size: 0.93rem;
+  }
+
+  .place-list ul li::marker {
+    color: var(--accent);
+  }
+
+  /* Now */
+  .now {
+    background: var(--ink);
+    color: #d9e0ec;
+  }
+
+  .now h2,
+  .now dd {
+    color: #fff;
+  }
+
+  .now .eyebrow {
+    color: #a9bdd6;
+  }
+
+  .now-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 900px) {
+    .now-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: 4rem;
+    }
+  }
+
+  .asof {
+    margin: 0.75rem 0 0;
+    font-size: 0.875rem;
+    color: #a9bdd6;
+  }
+
+  .now-list {
+    margin: 0;
+  }
+
+  .now-list > div {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding-block: 1.1rem;
+    border-top: 1px solid rgb(255 255 255 / 0.14);
+  }
+
+  .now-list > div:first-child {
+    border-top: 0;
+    padding-top: 0;
+  }
+
+  @media (min-width: 640px) {
+    .now-list > div {
+      grid-template-columns: 9rem minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .now-list dt {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #a9bdd6;
+    padding-top: 0.3rem;
+  }
+
+  .now-list dd {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+
+  .now + section {
+    border-top: 0;
+  }
+
+  /* Explore */
+  .page-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 3rem;
+  }
+
+  @media (min-width: 760px) {
+    .page-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .page-list a {
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: baseline;
+    padding-block: 1.1rem;
+    border-top: 1px solid var(--rule);
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .pg-num {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pg-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pg-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .pg-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .pg-arrow {
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+
+  .page-list a:hover .pg-title {
+    color: var(--accent-strong);
+  }
+
+  .page-list a:hover .pg-arrow {
+    transform: translateX(4px);
+  }
+</style>

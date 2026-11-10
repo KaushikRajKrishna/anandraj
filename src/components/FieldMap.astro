@@ -1,0 +1,125 @@
+---
+// Schematic map: places are positioned by real latitude/longitude (equirectangular),
+// without a country outline. Dashed arcs link Bihar to the cities in the research.
+import type { Place } from '../data/home';
+interface Props {
+  places: Place[];
+  originId?: string;
+}
+const { places, originId = 'bihar' } = Astro.props;
+
+const W = 300;
+const H = 330;
+const x = (lon: number) => (lon - 70) * 13 + 20;
+const y = (lat: number) => (31 - lat) * 15 + 20;
+
+const pts = places.map((p, i) => ({ ...p, n: i + 1, cx: x(p.lon), cy: y(p.lat) }));
+const origin = pts.find((p) => p.id === originId);
+const arcs = origin
+  ? pts
+      .filter((p) => p.id !== originId)
+      .map((p, i) => {
+        const mx = (origin.cx + p.cx) / 2;
+        const my = (origin.cy + p.cy) / 2;
+        const dx = p.cx - origin.cx;
+        const dy = p.cy - origin.cy;
+        const len = Math.hypot(dx, dy) || 1;
+        const bend = (i % 2 === 0 ? 0.22 : -0.22) * len;
+        const qx = mx + (-dy / len) * bend;
+        const qy = my + (dx / len) * bend;
+        return `M${origin.cx.toFixed(1)},${origin.cy.toFixed(1)} Q${qx.toFixed(1)},${qy.toFixed(1)} ${p.cx.toFixed(1)},${p.cy.toFixed(1)}`;
+      })
+  : [];
+
+// Background dot grid for a cartographic feel
+const grid: { cx: number; cy: number }[] = [];
+for (let gx = 10; gx < W; gx += 14) for (let gy = 10; gy < H; gy += 14) grid.push({ cx: gx, cy: gy });
+---
+
+<figure class="field-map">
+  <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-labelledby="map-title map-desc">
+    <title id="map-title">Places where the research is situated</title>
+    <desc id="map-desc">{places.map((p) => p.name).join(', ')}, positioned by latitude and longitude.</desc>
+    <g class="grid">
+      {grid.map((d) => <circle cx={d.cx} cy={d.cy} r="0.9" />)}
+    </g>
+    <g class="arcs">
+      {arcs.map((d) => <path d={d} />)}
+    </g>
+    {pts.map((p) => (
+      <g class="pt">
+        <circle class="halo" cx={p.cx} cy={p.cy} r="9" />
+        <circle class="dot" cx={p.cx} cy={p.cy} r="4.5" />
+        <text
+          class="lbl"
+          x={p.labelSide === 'left' ? p.cx - 13 : p.cx + 13}
+          y={p.cy + 4}
+          text-anchor={p.labelSide === 'left' ? 'end' : 'start'}
+        >
+          <tspan class="n">{p.n}</tspan> {p.name}
+        </text>
+      </g>
+    ))}
+  </svg>
+  <figcaption>Positions by latitude and longitude. Dashed lines link Bihar, a major region of out-migration, to the cities in this work.</figcaption>
+</figure>
+
+<style>
+  .field-map {
+    margin: 0;
+  }
+
+  svg {
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+    display: block;
+    margin-inline: auto;
+  }
+
+  .grid circle {
+    fill: var(--rule-strong);
+    opacity: 0.8;
+  }
+
+  .arcs path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.2;
+    stroke-dasharray: 3 4;
+    opacity: 0.75;
+  }
+
+  .halo {
+    fill: var(--accent-soft);
+  }
+
+  .dot {
+    fill: var(--ink);
+    stroke: var(--bg);
+    stroke-width: 1.5;
+  }
+
+  .lbl {
+    font-family: var(--serif);
+    font-size: 13px;
+    fill: var(--ink);
+    font-weight: 600;
+  }
+
+  .lbl .n {
+    font-family: var(--sans);
+    font-size: 10px;
+    fill: var(--accent);
+    font-weight: 600;
+  }
+
+  figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+    max-width: 30rem;
+    margin-inline: auto;
+  }
+</style>

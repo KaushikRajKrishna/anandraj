@@ -1,0 +1,89 @@
+---
+// Renders one bibliography entry in an author–date academic style.
+import type { Publication } from '../data/publications';
+import Icon from './Icon.astro';
+interface Props {
+  pub: Publication;
+  compact?: boolean;
+}
+const { pub, compact = false } = Astro.props;
+const href = pub.doi ? `https://doi.org/${pub.doi}` : pub.url;
+const linkLabel = pub.doi ? `doi:${pub.doi}` : 'Read online';
+const afterTitle = pub.reviewOf ? `. ${pub.reviewOf}.` : '.';
+const venueTail = pub.detail ? `, ${pub.detail}.` : '.';
+const venueLead = pub.venuePrefix ? ` ${pub.venuePrefix} ` : ' ';
+---
+
+<p class:list={['citation', { compact }]}>
+  <span class="authors">{pub.authors}</span>{` (${pub.year}). `}{pub.kind && `${pub.kind} `}{
+    pub.titleStyle === 'italic' ? <cite class="title">{pub.title}</cite> : <span class="title">“{pub.title}”</span>
+  }{afterTitle}{pub.venue && <>{venueLead}<em class="venue">{pub.venue}</em>{venueTail}</>}{
+    !pub.venue && pub.detail && ` ${pub.detail}.`
+  }{pub.isbn && ` ISBN: ${pub.isbn}.`}{pub.status && <> <span class="status">{pub.status}</span></>}{
+    href && (
+      <>
+        {' '}
+        <a class="link" href={href} target="_blank" rel="noopener noreferrer">{linkLabel}<Icon name="external" /></a>
+      </>
+    )
+  }
+</p>
+
+<style>
+  .citation {
+    margin: 0;
+    line-height: 1.65;
+    color: var(--ink-2);
+    font-size: 1rem;
+  }
+
+  .authors {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .title {
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.06em;
+  }
+
+  .venue {
+    color: var(--ink-2);
+  }
+
+  .status {
+    display: inline-block;
+    text-indent: 0;
+    margin-left: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-strong);
+    background: var(--accent-soft);
+    border-radius: 3px;
+    padding: 0.05rem 0.45rem;
+    vertical-align: 0.12em;
+  }
+
+  .link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-indent: 0;
+    margin-left: 0.25rem;
+    font-size: 0.875rem;
+    overflow-wrap: anywhere;
+  }
+
+  .link :global(svg) {
+    width: 0.85em;
+    height: 0.85em;
+    flex: none;
+  }
+
+  .compact {
+    font-size: 0.95rem;
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+// Compact vertical academic timeline.
+export interface TimelineEntry {
+  period: string;
+  title: string;
+  subtitle?: string;
+  detail?: string;
+  description?: string;
+}
+interface Props {
+  items: TimelineEntry[];
+}
+const { items } = Astro.props;
+---
+
+<ol class="timeline">
+  {items.map((item) => (
+    <li>
+      <span class="dot" aria-hidden="true"></span>
+      <p class="period">{item.period}</p>
+      <h3>{item.title}</h3>
+      {item.subtitle && <p class="subtitle">{item.subtitle}</p>}
+      {item.detail && <p class="detail">{item.detail}</p>}
+      {item.description && <p class="desc">{item.description}</p>}
+    </li>
+  ))}
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 1.5rem;
+    position: relative;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 4px;
+    top: 0.55rem;
+    bottom: 0.55rem;
+    width: 1px;
+    background: var(--rule-strong);
+  }
+
+  li {
+    position: relative;
+    padding-bottom: 1.75rem;
+  }
+
+  li:last-child {
+    padding-bottom: 0;
+  }
+
+  .dot {
+    position: absolute;
+    left: calc(-1.5rem + 0px);
+    top: 0.45rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--accent);
+  }
+
+  li:first-child .dot {
+    background: var(--accent);
+  }
+
+  .period {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 0.2rem;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+  }
+
+  .subtitle {
+    margin: 0.15rem 0 0;
+    color: var(--ink-2);
+  }
+
+  .detail {
+    margin: 0.15rem 0 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .desc {
+    margin: 0.5rem 0 0;
+    font-size: 0.97rem;
+    max-width: var(--prose);
+  }
+</style>

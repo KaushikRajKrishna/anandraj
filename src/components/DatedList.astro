@@ -1,0 +1,92 @@
+---
+// Chronological list with a date column — used for conferences, workshops, awards, etc.
+import type { DatedItem } from '../data/activities';
+interface Props {
+  items: DatedItem[];
+  titleAs?: 'h3' | 'p';
+}
+const { items, titleAs = 'h3' } = Astro.props;
+const Title = titleAs;
+---
+
+<ol class="dated-list">
+  {items.map((item) => (
+    <li>
+      <p class="date">{item.date}</p>
+      <div class="body">
+        <Title class="title">{item.title}</Title>
+        {item.meta && <p class="meta-line">{item.meta}</p>}
+        {item.note && <p class="note">{item.note}</p>}
+        {item.description && <p class="desc">{item.description}</p>}
+      </div>
+    </li>
+  ))}
+</ol>
+
+<style>
+  .dated-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  li:first-child {
+    padding-top: 0.25rem;
+  }
+
+  li:last-child {
+    border-bottom: 0;
+  }
+
+  @media (min-width: 640px) {
+    li {
+      grid-template-columns: 9.5rem minmax(0, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .date {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    padding-top: 0.15rem;
+  }
+
+  .title {
+    font-family: var(--serif);
+    font-size: 1.08rem;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.4;
+    margin: 0;
+  }
+
+  .meta-line {
+    margin: 0.25rem 0 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+
+  .note {
+    margin: 0.15rem 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-style: italic;
+  }
+
+  .desc {
+    margin: 0.45rem 0 0;
+    color: var(--ink-2);
+    font-size: 0.95rem;
+  }
+</style>

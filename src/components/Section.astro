@@ -1,0 +1,67 @@
+---
+// A titled content section with an optional letter label (A, B, C…) and anchor id.
+interface Props {
+  id: string;
+  title: string;
+  letter?: string;
+  intro?: string;
+  count?: number;
+}
+const { id, title, letter, intro, count } = Astro.props;
+---
+
+<section class="section" id={id} aria-labelledby={`${id}-title`}>
+  <header class="section-head">
+    <h2 id={`${id}-title`}>
+      {letter && <span class="letter">{letter}.</span>}
+      {title}
+      {typeof count === 'number' && <span class="count">{count}</span>}
+    </h2>
+    {intro && <p class="intro">{intro}</p>}
+  </header>
+  <slot />
+</section>
+
+<style>
+  .section + :global(.section) {
+    margin-top: clamp(2.75rem, 5vw, 3.75rem);
+  }
+
+  .section-head {
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 0.7rem;
+    margin-bottom: 1.25rem;
+  }
+
+  h2 {
+    font-size: clamp(1.35rem, 2.6vw, 1.6rem);
+    font-weight: 600;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .letter {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .count {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--muted);
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    padding: 0 0.5rem;
+    line-height: 1.6;
+    transform: translateY(-0.15em);
+  }
+
+  .intro {
+    margin: 0.5rem 0 0;
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+</style>

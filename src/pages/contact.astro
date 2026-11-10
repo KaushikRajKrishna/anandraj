@@ -1,0 +1,127 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ContactDetails from '../components/ContactDetails.astro';
+import Icon from '../components/Icon.astro';
+import { profile } from '../data/profile';
+---
+
+<BaseLayout
+  title="Contact"
+  description="Contact Anand Raj, PhD Scholar, Department of Liberal Arts, IIT Hyderabad: email, phone and academic correspondence."
+>
+  <PageHeader eyebrow="Contact" title="Academic correspondence" />
+
+  <div class="container contact-wrap">
+    <div class="card">
+      <p class="name">{profile.name}</p>
+      <p class="role">{profile.designation}</p>
+      <p class="aff">
+        {profile.department}<br />
+        {profile.institution}<br />
+        {profile.location}
+      </p>
+      <hr class="rule" />
+      <ContactDetails showAffiliation={false} />
+      <div class="actions">
+        <a class="btn" href={`mailto:${profile.email}`}><Icon name="mail" /> Write an email</a>
+        <a class="btn btn--ghost" href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>
+          <Icon name="download" /> Download CV
+        </a>
+      </div>
+    </div>
+
+    <div class="invite prose">
+      <h2>Get in touch</h2>
+      <p>
+        I welcome correspondence from scholars, students, practitioners and organisations working on labour,
+        migration, the gig and platform economy, urban studies, and development and social inequality.
+      </p>
+      <p>Please feel free to write about:</p>
+      <ul>
+        <li>Research collaboration and co-authorship</li>
+        <li>Conferences, workshops, seminars and invited talks</li>
+        <li>Publications, book reviews and editorial work</li>
+        <li>Teaching and academic mentoring</li>
+        <li>Engagement with workers’ organisations and policy discussions on platform work</li>
+      </ul>
+      <p class="meta">Email is the preferred mode of contact. I will try to respond as soon as possible.</p>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-wrap {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding-bottom: 5rem;
+  }
+
+  @media (min-width: 900px) {
+    .contact-wrap {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+      gap: 4.5rem;
+      align-items: start;
+    }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--ink);
+    border-radius: var(--radius);
+    padding: clamp(1.5rem, 4vw, 2.25rem);
+  }
+
+  .name {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .role {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--accent-strong);
+    font-size: 1.15rem;
+    margin: 0.25rem 0 0.75rem;
+  }
+
+  .aff {
+    color: var(--ink-2);
+    line-height: 1.6;
+    margin-bottom: 1.25rem;
+  }
+
+  .card .rule {
+    margin-bottom: 0.25rem;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  .invite h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .invite ul {
+    margin: 0 0 1.25rem;
+  }
+
+  .invite li {
+    margin-bottom: 0.35rem;
+  }
+
+  .invite li::marker {
+    color: var(--accent);
+  }
+</style>
