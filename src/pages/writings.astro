@@ -17,9 +17,5 @@ const total = writingSections.reduce((n, s) => n + s.items.length, 0);
     lead={`Public scholarship, essays and other academic writings, in reverse chronological order within each section (${total} entries).`}
   />
 
-  <Bibliography sections={writingSections}>
-    <p class="sibling-link" slot="after">
-      <a class="text-link" href="/publications">Academic Publications <span aria-hidden="true">→</span></a>
-    </p>
-  </Bibliography>
+  <Bibliography sections={writingSections} />
 </BaseLayout>

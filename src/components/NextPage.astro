@@ -1,0 +1,104 @@
+---
+// "Continue to <next page>" at the end of every page, following the main menu order
+// (src/data/navigation.ts). Pages removed or commented out of the menu are skipped automatically.
+// Group overview pages (/activities, /beyond-academia) continue to their first sub-page;
+// the last page in the menu leads back to Home.
+import { allPages, navigation, type NavLink } from '../data/navigation';
+
+const norm = (p: string) => (p.length > 1 ? p.replace(/\/+$/, '') : p);
+const current = norm(Astro.url.pathname);
+
+let next: NavLink | undefined;
+let lead = 'Continue to';
+
+const index = allPages.findIndex((p) => norm(p.href) === current);
+if (index !== -1) {
+  if (index < allPages.length - 1) {
+    next = allPages[index + 1];
+  } else {
+    next = allPages[0];
+    lead = 'Back to';
+  }
+} else {
+  // A group overview page that is not itself in the flat list
+  next = navigation.find((n) => norm(n.href) === current)?.children?.[0];
+}
+---
+
+{next && (
+  <nav class="next-page" aria-label="Next page">
+    <div class="container">
+      <a href={next.href}>
+        <span class="lead">{lead}</span>
+        <span class="label">
+          {next.label}
+          <span class="arrow" aria-hidden="true">→</span>
+        </span>
+        <span class="desc">{next.description}</span>
+      </a>
+    </div>
+  </nav>
+)}
+
+<style>
+  .next-page {
+    padding-block: 0 clamp(3rem, 6vw, 4.5rem);
+  }
+
+  .next-page a {
+    display: grid;
+    gap: 0.3rem;
+    padding: clamp(1.25rem, 3vw, 1.75rem) 0 0;
+    border-top: 1px solid var(--rule);
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .lead {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .label {
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 3vw, 1.9rem);
+    color: var(--ink);
+    transition: color 0.2s ease;
+  }
+
+  .arrow {
+    display: inline-block;
+    margin-left: 0.4rem;
+    color: var(--accent);
+    transition: transform 0.2s ease;
+  }
+
+  .desc {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .next-page a:hover .label {
+    color: var(--accent-strong);
+  }
+
+  .next-page a:hover .arrow {
+    transform: translateX(5px);
+  }
+
+  .next-page a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .label,
+    .arrow {
+      transition: none;
+    }
+  }
+</style>

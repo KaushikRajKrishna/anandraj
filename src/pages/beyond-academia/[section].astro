@@ -1,0 +1,96 @@
+---
+// One page per Beyond Academia section: /beyond-academia/sketching, /photography, /documentary.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import Gallery from '../../components/Gallery.astro';
+import { gallerySections, type GallerySection } from '../../data/beyondAcademia';
+
+export function getStaticPaths() {
+  return gallerySections.map((section) => ({ params: { section: section.slug }, props: { section } }));
+}
+
+const { section } = Astro.props as { section: GallerySection };
+---
+
+<BaseLayout
+  title={`${section.label} · Beyond Academia`}
+  description={`${section.description} Anand Raj, beyond academia.`}
+>
+  <PageHeader eyebrow={`Beyond Academia · ${section.letter}`} title={section.label} lead={section.description}>
+    <nav class="tabs" aria-label="Beyond Academia sections">
+      {gallerySections.map((s) => (
+        <a href={`/beyond-academia/${s.slug}`} aria-current={s.slug === section.slug ? 'page' : undefined}>
+          <span class="l">{s.letter}</span>
+          {s.label}
+        </a>
+      ))}
+    </nav>
+  </PageHeader>
+
+  <div class="container wrap">
+    {section.items.length > 0 ? (
+      <Gallery items={section.items} label={section.label} />
+    ) : (
+      <p class="empty">New work will appear here soon.</p>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .wrap {
+    padding-bottom: 5rem;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tabs a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.45rem 0.95rem 0.45rem 0.5rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.92rem;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  }
+
+  .tabs a:hover {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+  }
+
+  .tabs .l {
+    display: grid;
+    place-items: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .tabs a[aria-current='page'] {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+
+  .tabs a[aria-current='page'] .l {
+    background: rgb(255 255 255 / 0.16);
+    color: #fff;
+  }
+
+  .empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+</style>

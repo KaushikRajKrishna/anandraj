@@ -12,8 +12,8 @@ export interface NavItem extends NavLink {
 // Main menu. "My Writings" groups two pages in a dropdown.
 export const navigation: NavItem[] = [
   { label: 'Home', href: '/', description: 'Introduction, research questions and current work' },
-  { label: 'About', href: '/about', description: 'Biography, education and academic journey' },
-  { label: 'Research', href: '/research', description: 'Research interests, projects and research experience' },
+  { label: 'About', href: '/about', description: 'Biography, education and work experience' },
+  // { label: 'Research', href: '/research', description: 'Research interests, projects and research experience' },
   {
     label: 'My Writings',
     href: '/publications',
@@ -33,6 +33,16 @@ export const navigation: NavItem[] = [
       { label: 'Certificates and Courses', href: '/activities/certificates-and-courses', description: 'Certificate courses in research methods, writing, ethics and digital labour' },
       { label: 'Responsibilities and Leadership', href: '/activities/responsibilities-and-leadership', description: 'Institutional roles at IIT Hyderabad and academic mentoring' },
       { label: 'Talks / Lectures', href: '/activities/talks-and-lectures', description: 'Teaching, live classes and lectures' },
+    ],
+  },
+  {
+    label: 'Beyond Academia',
+    href: '/beyond-academia',
+    description: 'Sketching, photography and documentary work',
+    children: [
+      { label: 'Sketching', href: '/beyond-academia/sketching', description: 'Drawings, sketches and illustrated work' },
+      { label: 'Photography', href: '/beyond-academia/photography', description: 'Photographs and photo-led visual stories' },
+      { label: 'Documentary', href: '/beyond-academia/documentary', description: 'Photographs, films and links to longer pieces' },
     ],
   },
   { label: 'Contact', href: '/contact', description: 'Email, institutional affiliation and academic correspondence' },

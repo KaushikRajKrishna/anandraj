@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import NextPage from '../components/NextPage.astro';
 import { profile } from '../data/profile';
 import '../styles/global.css';
 
@@ -58,6 +59,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <Header />
     <main id="main" transition:animate="fade">
       <slot />
+      <NextPage />
     </main>
     <Footer />
   </body>

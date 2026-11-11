@@ -6,6 +6,60 @@ export interface ExperienceItem {
   description: string;
 }
 
+export interface WorkItem {
+  period: string;
+  role: string;
+  organisation: string;
+  /** Kind of position, plus supervisor or context */
+  detail: string;
+  description: string;
+}
+
+// Work experience on the About page: positions held (teaching, research, internships, volunteering),
+// most recent first. Degrees and the IIHS Urban Fellows Programme are listed under Education instead.
+export const workExperience: WorkItem[] = [
+  {
+    period: 'Jan 2026 – Apr 2026',
+    role: 'Teaching Assistant',
+    organisation: 'NPTEL course “Migration, Mobility, and Development”, IIT Hyderabad',
+    detail: 'Teaching assistantship · Course offered by Dr. Amrita Datta',
+    description:
+      'Supported an open online course delivered free to learners across India through the National Programme on Technology Enhanced Learning: reviewed recorded lectures, took live classes, drafted assessments and question sets, answered student queries and curated supplementary readings.',
+  },
+  {
+    period: 'Sept 2024 – Present',
+    role: 'Volunteer Researcher',
+    organisation: 'Telangana Gig and Platform Workers Union (TGPWU), Hyderabad',
+    detail: 'Volunteer research and advocacy',
+    description:
+      'Conduct comparative research on countries where trade union movements have secured stronger labour legislation, to support the union’s advocacy for location-based gig workers and strengthen its bargaining position with the government.',
+  },
+  {
+    period: 'Apr 2024 – May 2024',
+    role: 'Research Intern',
+    organisation: 'Centre for Sustainable Employment, Azim Premji University',
+    detail: 'Internship · Supervised by Dr. Rosa Abraham',
+    description:
+      'Contributed to the State of Working India Report 2024: analysed employment data, reviewed youth employment policies, and prepared graphs with accompanying descriptions.',
+  },
+  {
+    period: 'Apr 2023 – Oct 2023',
+    role: 'Research Associate',
+    organisation: 'V.V. Giri National Labour Institute, Govt. of India',
+    detail: 'Research project · Supervised by Dr. Sanjay Upadhyaya, Prof. Prabhu Mohapatra and Dr. Dheeraj Kumar Nite',
+    description:
+      'Worked on the project “Labour Movement and Anti-Colonial Freedom Struggle”: carried out archival research and reviewed the literature on the history of the Indian labour movement.',
+  },
+  {
+    period: 'Dec 2019 – Feb 2020',
+    role: 'Intern, Privileges Committee',
+    organisation: 'Delhi Legislative Assembly, Govt. of Delhi',
+    detail: 'Internship · Under then MLA Akhilesh Pati Tripathi',
+    description:
+      'Worked on a survey of public services and residents’ satisfaction in the Lal Bagh slum settlement in Delhi, examining the link between informal work and the viability and adequacy of housing.',
+  },
+];
+
 export const teaching: ExperienceItem[] = [
   {
     id: 'nptel',

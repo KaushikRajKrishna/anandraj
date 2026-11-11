@@ -14,7 +14,7 @@ export const questions: Question[] = [
     q: 'How do migrant workers in the platform economy resist and organise, and what can their unions learn from movements that won better labour legislation elsewhere?',
     connected: [
       { label: 'Paper on resistance among bike-based workers in Bengaluru (ISLE, 2024)', href: '/activities/conferences-and-workshops#conferences' },
-      { label: 'Comparative research with TGPWU', href: '/research#tgpwu' },
+      { label: 'Comparative research with TGPWU', href: '/about#work' },
     ],
   },
   {

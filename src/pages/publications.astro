@@ -17,9 +17,5 @@ const total = academicSections.reduce((n, s) => n + s.items.length, 0);
     lead={`Journal articles, book reviews, book chapters, books and research reports, in reverse chronological order within each section (${total} entries).`}
   />
 
-  <Bibliography sections={academicSections}>
-    <p class="sibling-link" slot="after">
-      <a class="text-link" href="/writings">Blogs / Writings <span aria-hidden="true">→</span></a>
-    </p>
-  </Bibliography>
+  <Bibliography sections={academicSections} />
 </BaseLayout>
