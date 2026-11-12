@@ -1,6 +1,6 @@
 ---
 import { allPages } from '../data/navigation';
-import { profile } from '../data/profile';
+import { academicProfiles, profile } from '../data/profile';
 import Icon from './Icon.astro';
 const year = new Date().getFullYear();
 ---
@@ -13,11 +13,16 @@ const year = new Date().getFullYear();
         {profile.designation}, {profile.department}<br />
         {profile.institution}
       </p>
+      <ul class="academic-links" aria-label="Academic profiles">
+        {academicProfiles.map((item) => (
+          <li><a href={item.href} target="_blank" rel="noopener noreferrer">{item.label}</a></li>
+        ))}
+      </ul>
     </div>
     <nav aria-label="Footer">
       <ul>
         {allPages.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
-        <li><a href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>Download CV</a></li>
+        <li><a href={profile.cv} download="Curriculum Vitae (CV)_ Anand Raj.pdf" data-astro-reload>Download CV</a></li>
       </ul>
     </nav>
     <div class="f-contact">
@@ -67,6 +72,13 @@ const year = new Date().getFullYear();
     color: var(--muted);
     line-height: 1.6;
     margin: 0;
+  }
+
+  .academic-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: 2rem;
   }
 
   ul {

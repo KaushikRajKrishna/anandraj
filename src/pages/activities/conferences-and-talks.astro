@@ -1,0 +1,37 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import DatedList from '../../components/DatedList.astro';
+import { conferences } from '../../data/activities';
+import { teaching } from '../../data/experience';
+
+const talks = teaching.map((item) => ({
+  id: item.id,
+  date: item.period,
+  title: item.role,
+  meta: item.organisation,
+  description: item.description,
+}));
+
+const index = [
+  { id: 'conferences', letter: 'A', label: 'Conference Presentations' },
+  { id: 'talks', letter: 'B', label: 'Talks' },
+];
+---
+
+<SubPage
+  title="Conferences and Talks"
+  eyebrow="Academic Engagements · Conferences and Talks"
+  lead="Conference paper presentations, teaching, live classes and lectures."
+  description="Conference presentations, Talks by Anand Raj, PhD Scholar at IIT Hyderabad."
+  group="/activities"
+  index={index}
+>
+  <Section id="conferences" letter="A" title="Conference Presentations" count={conferences.length}>
+    <DatedList items={conferences} />
+  </Section>
+
+  <Section id="talks" letter="B" title="Talks" count={talks.length}>
+    <DatedList items={talks} />
+  </Section>
+</SubPage>

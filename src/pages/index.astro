@@ -45,59 +45,20 @@ import { statement, questions, places, now } from '../data/home';
     <div class="container">
       <div class="sec-head">
         <p class="eyebrow">Lines of inquiry</p>
-        <h2 id="h-questions">Questions I am working through</h2>
+        <h2 id="h-questions">Questions on which I am interested in:</h2>
       </div>
       <ol class="q-list">
         {questions.map((item, i) => (
           <li>
             <span class="q-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <div>
-              <p class="q">{item.q}</p>
-              <ul class="q-links" aria-label="Connected work">
-                {item.connected.map((c) => (
-                  <li><a href={c.href}>{c.label}</a></li>
-                ))}
-              </ul>
-            </div>
+            <p class="q">{item.q}</p>
           </li>
         ))}
       </ol>
     </div>
   </section>
 
-  <!-- 3. Places -->
-  <section class="places" aria-labelledby="h-places">
-    <div class="container places-grid">
-      <div>
-        <div class="sec-head">
-          <p class="eyebrow">Sites</p>
-          <h2 id="h-places">Where the research is situated</h2>
-          <p class="sec-lead">
-            From the source regions of migration to the cities where migrants find work, my research has moved
-            between four places.
-          </p>
-        </div>
-        <ol class="place-list">
-          {places.map((p, i) => (
-            <li>
-              <span class="p-num">{i + 1}</span>
-              <div>
-                <h3>{p.name} <span class="region">{p.region}</span></h3>
-                <ul>
-                  {p.work.map((w) => <li>{w}</li>)}
-                </ul>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </div>
-      <div class="map-col">
-        <FieldMap places={places} />
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Now -->
+  <!-- 3. Current work -->
   <section class="now" aria-labelledby="h-now">
     <div class="container now-grid">
       <div class="sec-head">
@@ -116,8 +77,48 @@ import { statement, questions, places, now } from '../data/home';
     </div>
   </section>
 
-  <!-- 5. Community Building (feedback) -->
+  <!-- 4. Places -->
+  <section class="places" aria-labelledby="h-places">
+    <div class="container places-grid">
+      <div>
+        <div class="sec-head">
+          <p class="eyebrow">Places</p>
+          <h2 id="h-places">Where I have lived, worked and done fieldwork</h2>
+          <p class="sec-lead">
+            Places that have shaped me and my research.
+          </p>
+        </div>
+        <ul class="place-list">
+          {places.map((p) => (
+            <li>{p.name}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="map-col">
+        <FieldMap places={places} />
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Testimonials (feedback) -->
   <CommunityFeedback />
+
+  <!-- 6. Bio -->
+  <section class="bio-section" aria-labelledby="h-bio">
+    <div class="container">
+      <div class="bio-content">
+        <p class="eyebrow">Bio</p>
+        <h2 id="h-bio">Short Bio</h2>
+        <p>
+          Anand Raj is a PhD scholar in the Department of Liberal Arts at IIT Hyderabad. His research covers political
+          economy, digital labour, urbanisation, migration, science and technology studies (STS) and development studies.
+          He has worked with the V.V. Giri National Labour Institute and the Telangana Gig and Platform Workers Union,
+          and was an Urban Fellow at the Indian Institute for Human Settlements.
+        </p>
+        <p class="bio-note">(Feel free to use this when introducing me at events or in programmes.)</p>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
 
 <style>
@@ -142,6 +143,25 @@ import { statement, questions, places, now } from '../data/home';
     margin: 0.75rem 0 0;
     color: var(--muted);
     max-width: 36rem;
+  }
+
+  .bio-content {
+    max-width: 52rem;
+  }
+
+  .bio-section {
+    border-top: 1px solid var(--rule);
+  }
+
+  .bio-content > p:not(.eyebrow) {
+    margin-top: 1rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+  }
+
+  .bio-content .bio-note {
+    color: var(--muted);
+    font-size: 0.9rem;
   }
 
   /* Hero */
@@ -200,6 +220,13 @@ import { statement, questions, places, now } from '../data/home';
     overflow: hidden;
     border: 1px solid var(--rule);
     background: var(--surface);
+    transform-origin: center;
+    transition: transform 0.35s ease;
+    z-index: 1;
+  }
+
+  .hero-media:hover {
+    transform: scale(1.08);
   }
 
   .portrait,
@@ -216,6 +243,12 @@ import { statement, questions, places, now } from '../data/home';
   .hero-media :global(.hero-art) {
     border: 0;
     border-radius: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-media {
+      transition: none;
+    }
   }
 
   .actions {
@@ -321,63 +354,25 @@ import { statement, questions, places, now } from '../data/home';
 
   @media (min-width: 900px) {
     .places-grid {
-      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-      gap: 4rem;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 2rem;
       align-items: center;
     }
   }
 
   .place-list {
-    list-style: none;
+    list-style: disc;
     margin: 0;
-    padding: 0;
+    padding-left: 1.25rem;
   }
 
   .place-list > li {
-    display: grid;
-    grid-template-columns: 2rem minmax(0, 1fr);
-    gap: 0.75rem;
-    padding-block: 1rem;
+    padding-block: 0.75rem;
     border-top: 1px solid var(--rule);
-  }
-
-  .p-num {
-    display: grid;
-    place-items: center;
-    width: 1.6rem;
-    height: 1.6rem;
-    border-radius: 50%;
-    background: var(--ink);
-    color: var(--bg);
-    font-size: 0.75rem;
-    font-weight: 600;
-    margin-top: 0.1rem;
-  }
-
-  .place-list h3 {
     font-size: 1.15rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.5rem;
   }
 
-  .region {
-    font-family: var(--sans);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-
-  .place-list ul {
-    margin: 0.35rem 0 0;
-    padding-left: 1rem;
-    font-size: 0.93rem;
-  }
-
-  .place-list ul li::marker {
+  .place-list > li::marker {
     color: var(--accent);
   }
 

@@ -149,7 +149,7 @@ const inGroup = (hrefs: string[]) => hrefs.map(normalise).includes(current);
     position: sticky;
     top: 0;
     z-index: 50;
-    background: color-mix(in srgb, var(--bg) 92%, transparent);
+    background: var(--surface-2);
     backdrop-filter: saturate(140%) blur(8px);
     -webkit-backdrop-filter: saturate(140%) blur(8px);
     border-bottom: 1px solid transparent;
@@ -268,7 +268,7 @@ const inGroup = (hrefs: string[]) => hrefs.map(normalise).includes(current);
     font-weight: 500;
     color: var(--ink-2);
     white-space: nowrap;
-    cursor: pointer;
+    cursor: url('/pen-cursor.svg') 1 15, pointer;
   }
 
   .parent::after {
@@ -382,7 +382,7 @@ const inGroup = (hrefs: string[]) => hrefs.map(normalise).includes(current);
     border: 1px solid var(--rule-strong);
     border-radius: var(--radius);
     background: var(--surface);
-    cursor: pointer;
+    cursor: url('/pen-cursor.svg') 1 15, pointer;
     align-items: center;
     justify-content: center;
     flex: none;

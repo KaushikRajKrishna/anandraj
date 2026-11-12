@@ -1,4 +1,4 @@
-// "Community Building" feedback shown at the bottom of the Home page.
+// "Testimonials" feedback shown at the bottom of the Home page.
 //
 // HOW TO ADD REAL FEEDBACK
 // - Replace the sample entries below with real notes (only with the person's permission).

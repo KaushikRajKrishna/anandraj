@@ -1,0 +1,40 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import DatedList from '../../components/DatedList.astro';
+import { responsibilities } from '../../data/activities';
+import { researchExperience } from '../../data/experience';
+
+const community = researchExperience
+  .filter((item) => item.id === 'tgpwu')
+  .map((item) => ({
+    id: item.id,
+    date: item.period,
+    title: item.role,
+    meta: item.organisation,
+    description: item.description,
+  }));
+const mentorship = responsibilities.filter((item) => item.id === 'mentor');
+
+const index = [
+  { id: 'community', letter: 'A', label: 'Community Engagement' },
+  { id: 'mentorship', letter: 'B', label: 'Mentorship' },
+];
+---
+
+<SubPage
+  title="Community Building and Mentorship"
+  eyebrow="Academic Engagements · Community Building and Mentorship"
+  lead="Community engagement and academic mentoring."
+  description="Community engagement and academic mentorship by Anand Raj."
+  group="/activities"
+  index={index}
+>
+  <Section id="community" letter="A" title="Community Engagement" count={community.length}>
+    <DatedList items={community} />
+  </Section>
+
+  <Section id="mentorship" letter="B" title="Mentorship" count={mentorship.length}>
+    <DatedList items={mentorship} />
+  </Section>
+</SubPage>

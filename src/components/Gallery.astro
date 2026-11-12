@@ -1,13 +1,11 @@
 ---
-// Grid of photos, videos and links for a Beyond Academia section.
-// Photos open full size in a viewer with previous/next and keyboard support.
+// Text captions, videos and links for a Beyond Academia section.
 import type { GalleryItem } from '../data/beyondAcademia';
 
 interface Props {
   items: GalleryItem[];
-  label: string;
 }
-const { items, label } = Astro.props;
+const { items } = Astro.props;
 
 /** YouTube / Vimeo page URL → embeddable URL; anything else is treated as a video file. */
 function embedUrl(src: string): string | null {
@@ -26,26 +24,11 @@ const hostOf = (href: string) => {
   }
 };
 
-const images = items.filter((i) => i.type === 'image');
 ---
 
 <ul class="gallery" role="list">
   {items.map((item) => (
     <li class:list={['g-item', `is-${item.type}`]}>
-      {item.type === 'image' && (
-        <button
-          type="button"
-          class="media frame"
-          data-lightbox={images.indexOf(item)}
-          aria-label={`View larger: ${item.caption}`}
-        >
-          <img src={item.src} alt={item.alt} loading="lazy" decoding="async" />
-          <span class="zoom" aria-hidden="true">
-            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg>
-          </span>
-        </button>
-      )}
-
       {item.type === 'video' && (
         <div class="media video">
           {embedUrl(item.src) ? (
@@ -57,20 +40,16 @@ const images = items.filter((i) => i.type === 'image');
               allowfullscreen
             />
           ) : (
-            <video src={item.src} poster={item.poster} controls preload="metadata" />
+            <video src={item.src} controls preload="metadata" />
           )}
         </div>
       )}
 
       {item.type === 'link' && (
         <a class="media link-card" href={item.href} target="_blank" rel="noopener noreferrer">
-          {item.image ? (
-            <span class="frame"><img src={item.image} alt="" loading="lazy" decoding="async" /></span>
-          ) : (
-            <span class="link-plain">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" /></svg>
-            </span>
-          )}
+          <span class="link-plain">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1" /></svg>
+          </span>
           <span class="link-title">
             {item.title}
             <span class="ext" aria-hidden="true">↗</span>
@@ -96,86 +75,6 @@ const images = items.filter((i) => i.type === 'image');
     </li>
   ))}
 </ul>
-
-{images.length > 0 && (
-  <dialog class="lightbox" aria-label={`${label}: photo viewer`} data-images={JSON.stringify(images.map((i) => ({ src: i.src, alt: i.alt, caption: i.caption })))}>
-    <div class="lb-inner">
-      <button type="button" class="lb-btn lb-close" aria-label="Close viewer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
-      </button>
-      <figure class="lb-figure">
-        <img class="lb-img" alt="" />
-        <figcaption>
-          <span class="lb-caption"></span>
-          <span class="lb-count"></span>
-        </figcaption>
-      </figure>
-      {images.length > 1 && (
-        <>
-          <button type="button" class="lb-btn lb-prev" aria-label="Previous photo">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
-          </button>
-          <button type="button" class="lb-btn lb-next" aria-label="Next photo">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
-          </button>
-        </>
-      )}
-    </div>
-  </dialog>
-)}
-
-<script>
-  type Shot = { src: string; alt: string; caption: string };
-
-  function initGallery() {
-    const dialog = document.querySelector<HTMLDialogElement>('dialog.lightbox');
-    if (!dialog || dialog.dataset.bound) return;
-    dialog.dataset.bound = '1';
-
-    const shots: Shot[] = JSON.parse(dialog.dataset.images ?? '[]');
-    const img = dialog.querySelector<HTMLImageElement>('.lb-img')!;
-    const cap = dialog.querySelector<HTMLElement>('.lb-caption')!;
-    const count = dialog.querySelector<HTMLElement>('.lb-count')!;
-    let index = 0;
-    let opener: HTMLElement | null = null;
-
-    const show = (i: number) => {
-      index = (i + shots.length) % shots.length;
-      const s = shots[index];
-      img.src = s.src;
-      img.alt = s.alt;
-      cap.textContent = s.caption;
-      count.textContent = shots.length > 1 ? `${index + 1} / ${shots.length}` : '';
-    };
-
-    document.querySelectorAll<HTMLButtonElement>('[data-lightbox]').forEach((btn) =>
-      btn.addEventListener('click', () => {
-        opener = btn;
-        show(Number(btn.dataset.lightbox));
-        dialog.showModal();
-        document.documentElement.classList.add('lb-open');
-      })
-    );
-
-    dialog.querySelector('.lb-close')?.addEventListener('click', () => dialog.close());
-    dialog.querySelector('.lb-prev')?.addEventListener('click', () => show(index - 1));
-    dialog.querySelector('.lb-next')?.addEventListener('click', () => show(index + 1));
-    // Clicking the dark backdrop (outside the photo and buttons) closes the viewer.
-    dialog.addEventListener('click', (e) => {
-      const t = e.target as HTMLElement;
-      if (t === dialog || t.classList.contains('lb-inner') || t.classList.contains('lb-figure')) dialog.close();
-    });
-    dialog.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') show(index + 1);
-      if (e.key === 'ArrowLeft') show(index - 1);
-    });
-    dialog.addEventListener('close', () => {
-      document.documentElement.classList.remove('lb-open');
-      opener?.focus();
-    });
-  }
-  document.addEventListener('astro:page-load', initGallery);
-</script>
 
 <style>
   .gallery {
@@ -205,44 +104,7 @@ const images = items.filter((i) => i.type === 'image');
     transition: transform 0.25s ease, box-shadow 0.25s ease;
   }
 
-  /* Uniform 4:5 frame; the whole picture stays visible (nothing cropped). */
-  .frame {
-    position: relative;
-    display: block;
-    aspect-ratio: 4 / 5;
-    padding: 0;
-    cursor: zoom-in;
-    background:
-      radial-gradient(circle at 1px 1px, rgb(21 35 61 / 0.07) 1px, transparent 0) 0 0 / 14px 14px,
-      #f3f1ec;
-  }
-
-  .frame img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-  }
-
-  .zoom {
-    position: absolute;
-    right: 0.6rem;
-    bottom: 0.6rem;
-    display: grid;
-    place-items: center;
-    width: 2.1rem;
-    height: 2.1rem;
-    border-radius: 50%;
-    background: rgb(21 35 61 / 0.82);
-    color: #fff;
-    opacity: 0;
-    transform: translateY(4px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-
-  .zoom svg,
-  .link-plain svg,
-  .lb-btn svg {
+  .link-plain svg {
     width: 1rem;
     height: 1rem;
     fill: none;
@@ -256,12 +118,6 @@ const images = items.filter((i) => i.type === 'image');
   .media:focus-visible {
     transform: translateY(-3px);
     box-shadow: 0 1px 2px rgb(21 35 61 / 0.06), 0 18px 34px -18px rgb(21 35 61 / 0.45);
-  }
-
-  .media:hover .zoom,
-  .media:focus-visible .zoom {
-    opacity: 1;
-    transform: none;
   }
 
   .media:focus-visible {
@@ -287,11 +143,6 @@ const images = items.filter((i) => i.type === 'image');
   .link-card {
     color: inherit;
     text-decoration: none;
-  }
-
-  .link-card .frame {
-    cursor: pointer;
-    border-bottom: 1px solid var(--rule);
   }
 
   .link-plain {
@@ -362,134 +213,8 @@ const images = items.filter((i) => i.type === 'image');
     text-transform: uppercase;
   }
 
-  /* Viewer */
-  :global(html.lb-open) {
-    overflow: hidden;
-  }
-
-  .lightbox {
-    width: 100vw;
-    height: 100dvh;
-    max-width: none;
-    max-height: none;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    background: rgb(10 16 28 / 0.94);
-    color: #fff;
-  }
-
-  .lightbox::backdrop {
-    background: transparent;
-  }
-
-  .lb-inner {
-    position: relative;
-    height: 100%;
-    display: grid;
-    place-items: center;
-    padding: 3.5rem 4.5rem 1.5rem;
-  }
-
-  .lb-figure {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.9rem;
-    max-width: 100%;
-    max-height: 100%;
-  }
-
-  .lb-img {
-    max-width: min(100%, 60rem);
-    max-height: calc(100dvh - 9rem);
-    object-fit: contain;
-    border-radius: 4px;
-    box-shadow: 0 20px 60px -20px rgb(0 0 0 / 0.6);
-  }
-
-  .lightbox figcaption {
-    display: flex;
-    gap: 1rem;
-    align-items: baseline;
-    text-align: center;
-    font-family: var(--serif);
-    font-size: 1.05rem;
-  }
-
-  .lb-count {
-    font-family: var(--sans);
-    font-size: 0.8rem;
-    color: rgb(255 255 255 / 0.6);
-  }
-
-  .lb-btn {
-    position: absolute;
-    display: grid;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 50%;
-    border: 1px solid rgb(255 255 255 / 0.25);
-    background: rgb(255 255 255 / 0.08);
-    color: #fff;
-    cursor: pointer;
-    transition: background 0.2s ease;
-  }
-
-  .lb-btn:hover {
-    background: rgb(255 255 255 / 0.2);
-  }
-
-  .lb-btn:focus-visible {
-    outline: 2px solid #fff;
-    outline-offset: 2px;
-  }
-
-  .lb-close {
-    top: 0.9rem;
-    right: 0.9rem;
-  }
-
-  .lb-prev,
-  .lb-next {
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  .lb-prev {
-    left: 0.9rem;
-  }
-
-  .lb-next {
-    right: 0.9rem;
-  }
-
-  @media (max-width: 679px) {
-    .lb-inner {
-      padding: 3.75rem 0.75rem 5rem;
-    }
-
-    .lb-prev,
-    .lb-next {
-      top: auto;
-      bottom: 1rem;
-      transform: none;
-    }
-
-    .lb-prev {
-      left: calc(50% - 3.25rem);
-    }
-
-    .lb-next {
-      right: calc(50% - 3.25rem);
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .media,
-    .zoom {
+    .media {
       transition: none;
     }
   }
