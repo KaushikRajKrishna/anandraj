@@ -6,15 +6,15 @@ import { conferences, workshops } from '../../data/activities';
 
 const index = [
   { id: 'conferences', letter: 'A', label: 'Conference Paper Presentations' },
-  { id: 'workshops', letter: 'B', label: 'Workshops and Academic Programmes' },
+  { id: 'workshops', letter: 'B', label: 'Workshops' },
 ];
 ---
 
 <SubPage
   title="Conferences and Workshops"
   eyebrow="Academic Engagements · Conferences and Workshops"
-  lead="Papers presented at national and international conferences, and selective workshops and academic programmes attended."
-  description="Conference paper presentations, workshops and academic programmes of Anand Raj, PhD Scholar at IIT Hyderabad."
+  lead="Papers presented at national and international conferences, and selective workshops attended."
+  description="Conference paper presentations, workshops of Anand Raj, PhD Scholar at IIT Hyderabad."
   group="/activities"
   index={index}
 >
@@ -22,7 +22,7 @@ const index = [
     <DatedList items={conferences} />
   </Section>
 
-  <Section id="workshops" letter="B" title="Workshops and Academic Programmes" count={workshops.length}>
+  <Section id="workshops" letter="B" title="Workshops" count={workshops.length}>
     <DatedList items={workshops} />
   </Section>
 </SubPage>

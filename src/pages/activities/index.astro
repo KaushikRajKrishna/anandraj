@@ -4,28 +4,28 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import { navigation } from '../../data/navigation';
 import { conferences, workshops, awards, certificates, responsibilities } from '../../data/activities';
-import { teaching } from '../../data/experience';
+import { teaching, researchExperience } from '../../data/experience';
 
 const group = navigation.find((n) => n.href === '/activities');
 const pages = group?.children ?? [];
 
 const counts: Record<string, string> = {
-  '/activities/conferences-and-workshops': `${conferences.length} presentations · ${workshops.length} workshops`,
+  '/activities/conferences-and-talks': `${conferences.length} presentations · ${teaching.length} teaching entry`,
+  '/activities/workshops-and-training': `${workshops.length} workshops · ${certificates.length} courses`,
   '/activities/awards-and-grants': `${awards.length} entries`,
-  '/activities/certificates-and-courses': `${certificates.length} courses`,
-  '/activities/responsibilities-and-leadership': `${responsibilities.length} roles`,
-  '/activities/talks-and-lectures': `${teaching.length} ${teaching.length === 1 ? 'entry' : 'entries'}`,
+  '/activities/community-building-and-mentorship': `${researchExperience.filter((item) => item.id === 'tgpwu').length + responsibilities.filter((item) => item.id === 'mentor').length} entries`,
+  '/activities/responsibilities-and-leadership': `${responsibilities.filter((item) => item.id !== 'mentor').length} roles`,
 };
 ---
 
 <BaseLayout
   title="Academic Engagements"
-  description="Conferences, workshops, awards, certificate courses, responsibilities and lectures of Anand Raj, PhD Scholar at IIT Hyderabad."
+  description="Conferences and talks, workshops and training, awards and grants, community building and mentorship, responsibilities and leadership of Anand Raj."
 >
   <PageHeader
     eyebrow="Academic Engagements"
     title="Academic Engagements"
-    lead="Conferences and workshops, awards, courses, institutional responsibilities, and teaching."
+    lead="Conferences and talks, workshops and training, awards and grants, community building and mentorship, responsibilities and leadership."
   />
 
   <div class="container wrap">

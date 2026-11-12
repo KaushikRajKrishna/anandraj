@@ -85,7 +85,7 @@ export const publicationSections: PublicationSection[] = [
     id: 'book-chapters',
     group: 'academic',
     letter: 'C',
-    title: 'Book Chapters',
+    title: 'Books/Book Chapters',
     items: [
       {
         id: 'labour-leaders-2025',

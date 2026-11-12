@@ -26,13 +26,13 @@ export const navigation: NavItem[] = [
   {
     label: 'Academic Engagements',
     href: '/activities',
-    description: 'Conferences, workshops, awards, courses, responsibilities and lectures',
+    description: 'Conferences and talks, workshops and training, awards and grants, community building and mentorship, responsibilities and leadership',
     children: [
-      { label: 'Conferences and Workshops', href: '/activities/conferences-and-workshops', description: 'Conference paper presentations, workshops and academic programmes' },
+      { label: 'Conferences and Talks', href: '/activities/conferences-and-talks', description: 'Conference presentations, Talks' },
+      { label: 'Workshops and Training', href: '/activities/workshops-and-training', description: 'Workshops, academic programmes and certificate courses' },
       { label: 'Awards and Grants', href: '/activities/awards-and-grants', description: 'Fellowships, awards and academic distinctions' },
-      { label: 'Certificates and Courses', href: '/activities/certificates-and-courses', description: 'Certificate courses in research methods, writing, ethics and digital labour' },
-      { label: 'Responsibilities and Leadership', href: '/activities/responsibilities-and-leadership', description: 'Institutional roles at IIT Hyderabad and academic mentoring' },
-      { label: 'Talks / Lectures', href: '/activities/talks-and-lectures', description: 'Teaching, live classes and lectures' },
+      { label: 'Community Building and Mentorship', href: '/activities/community-building-and-mentorship', description: 'Community engagement and academic mentoring' },
+      { label: 'Responsibilities and Leadership', href: '/activities/responsibilities-and-leadership', description: 'Institutional roles and leadership at IIT Hyderabad' },
     ],
   },
   {

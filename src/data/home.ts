@@ -2,103 +2,82 @@
 // questions are framed as lines of inquiry, not findings.
 
 export const statement =
-  'I study how work, migration and the city are being remade in India, and how gig and platform workers navigate, contest and organise within these changes.';
+  'I study how work, employment and migration are produced and reproduced in cities';
 
 export interface Question {
   q: string;
-  connected: { label: string; href: string }[];
 }
 
 export const questions: Question[] = [
   {
-    q: 'How do migrant workers in the platform economy resist and organise, and what can their unions learn from movements that won better labour legislation elsewhere?',
-    connected: [
-      { label: 'Paper on resistance among bike-based workers in Bengaluru (ISLE, 2024)', href: '/activities/conferences-and-workshops#conferences' },
-      { label: 'Comparative research with TGPWU', href: '/about#work' },
-    ],
+    q: 'How do digital platforms and data infrastructures reshape the relations between the state, capital and workers?',
   },
   {
-    q: 'Why do global policy frameworks and workers themselves describe platform work so differently?',
-    connected: [
-      { label: 'Chapter on platform-based gig work and the SDGs (accepted)', href: '/publications#book-chapters' },
-      { label: '“Neoliberal Convergence” (DSA, 2025)', href: '/activities/conferences-and-workshops#conferences' },
-    ],
+    q: 'How do small and mid-sized cities work, and how do they shape work, employment and migration?',
   },
   {
-    q: 'What happens to citizenship and political representation when people migrate for work?',
-    connected: [
-      { label: 'Essays on migrants and the Bihar electoral roll (2025)', href: '/writings#public-scholarship' },
-      { label: 'Migrant Gig Workers, Electoral Politics, and Unequal Development in India (forthcoming)', href: '/writings#public-scholarship' },
-    ],
+    q: 'How are development policies made, and who is included or excluded when they reach people?',
   },
   {
-    q: 'What does the history of India’s labour movement offer workers who are organising today?',
-    connected: [
-      { label: 'The Role of Labour Leaders in the Indian Freedom Movement (2025)', href: '/publications#book-chapters' },
-      { label: 'Labour Movement and Anti-Colonial Freedom Movement (2024)', href: '/publications#research-reports' },
-    ],
+    q: 'How does the history of labour’s struggles shape the politics of the present?',
   },
 ];
 
 export interface Place {
   id: string;
   name: string;
-  region: string;
   lat: number;
   lon: number;
-  work: string[];
   /** Label placement on the map */
   labelSide: 'left' | 'right';
+  labelDy?: number;
 }
 
 export const places: Place[] = [
   {
-    id: 'delhi',
-    name: 'Delhi',
-    region: 'National Capital Territory',
+    id: 'motihari',
+    name: 'Motihari',
+    lat: 26.65,
+    lon: 84.92,
+    labelSide: 'right',
+    labelDy: -15,
+  },
+  {
+    id: 'new-delhi',
+    name: 'New Delhi',
     lat: 28.61,
     lon: 77.21,
     labelSide: 'left',
-    work: [
-      'Survey of services and housing among residents of the Lal Bagh slum (Delhi Legislative Assembly, 2019–20)',
-      'Study of rental housing and students’ learning at the University of Delhi (presented at Warwick, 2024)',
-    ],
+    labelDy: -7,
   },
   {
-    id: 'bihar',
-    name: 'Bihar',
-    region: 'Eastern India',
-    lat: 25.6,
-    lon: 85.14,
+    id: 'noida',
+    name: 'Noida',
+    lat: 28.54,
+    lon: 77.39,
     labelSide: 'right',
-    work: [
-      'Term paper on unemployment, policy and labour migration from Bihar (University of Delhi, 2021)',
-      'Writing on the disenfranchisement of migrants in Bihar’s electoral roll (2025)',
-    ],
-  },
-  {
-    id: 'hyderabad',
-    name: 'Hyderabad',
-    region: 'Telangana',
-    lat: 17.39,
-    lon: 78.49,
-    labelSide: 'right',
-    work: [
-      'Doctoral research, Department of Liberal Arts, IIT Hyderabad (2024–)',
-      'Volunteer research with the Telangana Gig and Platform Workers Union (2024–)',
-    ],
+    labelDy: 15,
   },
   {
     id: 'bengaluru',
     name: 'Bengaluru',
-    region: 'Karnataka',
     lat: 12.97,
     lon: 77.59,
     labelSide: 'right',
-    work: [
-      'Study of resistance among migrant bike-based platform workers (ISLE, 2024)',
-      'Socio-economic impacts of Bengaluru Metro construction (IIHS, 2023)',
-    ],
+  },
+  {
+    id: 'hyderabad',
+    name: 'Hyderabad',
+    lat: 17.39,
+    lon: 78.49,
+    labelSide: 'right',
+  },
+  {
+    id: 'toronto',
+    name: 'Toronto',
+    lat: 43.65,
+    lon: -79.38,
+    labelSide: 'right',
   },
 ];
 
@@ -107,7 +86,7 @@ export const now = {
   items: [
     { label: 'Doctoral research', text: 'Third year of the PhD in the Department of Liberal Arts, IIT Hyderabad, after presenting fieldwork from India at the University of Toronto’s urban mixed-methods workshop in August 2026.' },
     // { label: 'With workers', text: 'Ongoing comparative research for the Telangana Gig and Platform Workers Union on how trade union movements elsewhere secured better legislation.' },
-    { label: 'In press', text: 'A co-authored chapter in Gig Work in Growing India (Taylor & Francis) and a book review in the International Journal of Urban and Regional Research.' },
-    { label: 'In progress', text: '“Migrant Gig Workers, Electoral Politics, and Unequal Development in India”, with Shaik Salauddin.' },
+    { label: 'Upcoming', text: 'Visiting Fellow at the ILR School, Cornell University (September to December 2027), hosted by Prof. Virginia Doellgast.' },
+    { label: 'In progress', text: '“Migrant Gig Workers, Electoral Politics, and Unequal Development in India”, with Shaik Salauddin(Founder and President of TGPWU).' },
   ],
 };

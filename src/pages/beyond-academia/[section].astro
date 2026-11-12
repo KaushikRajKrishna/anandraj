@@ -10,6 +10,7 @@ export function getStaticPaths() {
 }
 
 const { section } = Astro.props as { section: GallerySection };
+const visibleItems = section.items.filter((item) => item.type !== 'image');
 ---
 
 <BaseLayout
@@ -28,8 +29,8 @@ const { section } = Astro.props as { section: GallerySection };
   </PageHeader>
 
   <div class="container wrap">
-    {section.items.length > 0 ? (
-      <Gallery items={section.items} label={section.label} />
+    {visibleItems.length > 0 ? (
+      <Gallery items={visibleItems} />
     ) : (
       <p class="empty">New work will appear here soon.</p>
     )}

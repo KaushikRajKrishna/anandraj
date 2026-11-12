@@ -1,0 +1,28 @@
+---
+import SubPage from '../../components/SubPage.astro';
+import Section from '../../components/Section.astro';
+import DatedList from '../../components/DatedList.astro';
+import { workshops, certificates } from '../../data/activities';
+
+const index = [
+  { id: 'workshops', letter: 'A', label: 'Workshops' },
+  { id: 'training', letter: 'B', label: 'Training and Certificate Courses' },
+];
+---
+
+<SubPage
+  title="Workshops and Training"
+  eyebrow="Academic Engagements · Workshops and Training"
+  lead="Academic workshops, programmes and certificate courses in research methods, writing, ethics and digital labour."
+  description="Workshops, academic programmes and certificate courses completed by Anand Raj."
+  group="/activities"
+  index={index}
+>
+  <Section id="workshops" letter="A" title="Workshops" count={workshops.length}>
+    <DatedList items={workshops} />
+  </Section>
+
+  <Section id="training" letter="B" title="Training and Certificate Courses" count={certificates.length}>
+    <DatedList items={certificates} />
+  </Section>
+</SubPage>

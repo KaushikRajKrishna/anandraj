@@ -4,18 +4,19 @@ import Section from '../../components/Section.astro';
 import DatedList from '../../components/DatedList.astro';
 import { responsibilities } from '../../data/activities';
 
-const index = [{ id: 'responsibilities', letter: 'A', label: 'Academic Responsibilities and Leadership' }];
+const leadership = responsibilities.filter((item) => item.id !== 'mentor');
+const index = [{ id: 'responsibilities', letter: 'A', label: 'Responsibilities and Leadership' }];
 ---
 
 <SubPage
   title="Responsibilities and Leadership"
   eyebrow="Academic Engagements · Responsibilities and Leadership"
-  lead="Institutional roles at IIT Hyderabad and mentoring for students from marginalised backgrounds."
-  description="Academic responsibilities and leadership roles of Anand Raj at IIT Hyderabad, and academic mentoring."
+  lead="Institutional responsibilities and leadership roles at IIT Hyderabad."
+  description="Academic responsibilities and leadership roles of Anand Raj at IIT Hyderabad."
   group="/activities"
   index={index}
 >
-  <Section id="responsibilities" title="Academic Responsibilities and Leadership" count={responsibilities.length}>
-    <DatedList items={responsibilities} />
+  <Section id="responsibilities" title="Responsibilities and Leadership" count={leadership.length}>
+    <DatedList items={leadership} />
   </Section>
 </SubPage>

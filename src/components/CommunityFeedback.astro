@@ -1,5 +1,5 @@
 ---
-// "Community Building": feedback cards, each drawn as a different kind of paper note
+// "Testimonials": feedback cards, each drawn as a different kind of paper note
 // (letter, ruled index card, postcard with stamp, pinned note, ink card).
 import { feedback, communityIntro, feedbackInvite, type FeedbackStyle } from '../data/community';
 import { profile } from '../data/profile';
@@ -23,7 +23,7 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(feedbackInv
       <div class="head">
         <div>
           <p class="eyebrow">Community</p>
-          <h2 id="h-community">Community Building</h2>
+          <h2 id="h-community">Testimonials</h2>
           <p class="intro">{communityIntro}</p>
         </div>
         <div class="controls">
@@ -141,7 +141,7 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(feedbackInv
     border: 1px solid var(--ink);
     background: var(--ink);
     color: #fff;
-    cursor: pointer;
+    cursor: url('/pen-cursor.svg') 1 15, pointer;
     transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease, transform 0.2s ease;
   }
 
@@ -166,7 +166,7 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(feedbackInv
     color: var(--muted);
     border-color: var(--rule-strong);
     opacity: 0.6;
-    cursor: default;
+    cursor: url('/pen-cursor.svg') 1 15, default;
   }
 
   h2 {

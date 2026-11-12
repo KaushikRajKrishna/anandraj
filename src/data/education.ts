@@ -15,12 +15,6 @@ export const education: EducationItem[] = [
     detail: 'Ministry of Education (MoE) Fellowship, July 2024 – June 2029',
   },
   {
-    period: 'Aug 2023 – May 2024',
-    degree: 'Urban Fellows Programme (UFP)',
-    institution: 'Indian Institute for Human Settlements (IIHS)',
-    place: 'Bengaluru',
-  },
-  {
     period: 'Aug 2019 – June 2021',
     degree: 'Master of Arts in Political Science',
     institution: 'University of Delhi',

@@ -15,8 +15,7 @@ export interface WorkItem {
   description: string;
 }
 
-// Work experience on the About page: positions held (teaching, research, internships, volunteering),
-// most recent first. Degrees and the IIHS Urban Fellows Programme are listed under Education instead.
+// Work experience on the About page, most recent first.
 export const workExperience: WorkItem[] = [
   {
     period: 'Jan 2026 – Apr 2026',
@@ -27,20 +26,20 @@ export const workExperience: WorkItem[] = [
       'Supported an open online course delivered free to learners across India through the National Programme on Technology Enhanced Learning: reviewed recorded lectures, took live classes, drafted assessments and question sets, answered student queries and curated supplementary readings.',
   },
   {
-    period: 'Sept 2024 – Present',
-    role: 'Volunteer Researcher',
-    organisation: 'Telangana Gig and Platform Workers Union (TGPWU), Hyderabad',
-    detail: 'Volunteer research and advocacy',
-    description:
-      'Conduct comparative research on countries where trade union movements have secured stronger labour legislation, to support the union’s advocacy for location-based gig workers and strengthen its bargaining position with the government.',
-  },
-  {
     period: 'Apr 2024 – May 2024',
     role: 'Research Intern',
     organisation: 'Centre for Sustainable Employment, Azim Premji University',
     detail: 'Internship · Supervised by Dr. Rosa Abraham',
     description:
       'Contributed to the State of Working India Report 2024: analysed employment data, reviewed youth employment policies, and prepared graphs with accompanying descriptions.',
+  },
+  {
+    period: 'Aug 2023 – May 2024',
+    role: 'Urban Fellow',
+    organisation: 'Indian Institute for Human Settlements (IIHS)',
+    detail: 'Urban Fellows Programme · Bengaluru',
+    description:
+      'Undertook interdisciplinary research and training in urban studies, focusing on the intersections of work, political economy, migration, and urban governance. Contributed to a research project on Bengaluru Metro construction and its socio-economic impacts. The programme combined coursework, fieldwork, and collaborative research, strengthening my analytical, methodological, and policy engagement skills relevant to urban and social research.',
   },
   {
     period: 'Apr 2023 – Oct 2023',
@@ -61,14 +60,7 @@ export const workExperience: WorkItem[] = [
 ];
 
 export const teaching: ExperienceItem[] = [
-  {
-    id: 'nptel',
-    period: 'Jan 2026 – April 2026',
-    role: 'Teaching Assistant',
-    organisation: 'National Programme on Technology Enhanced Learning (NPTEL)',
-    description:
-      'Teaching Assistant for the NPTEL course “Migration, Mobility, and Development” offered by Dr. Amrita Datta at IIT Hyderabad. NPTEL provides free online web and video courses to make higher education accessible across India. Responsibilities included reviewing recorded lectures, taking live classes, drafting assessments and questions, clarifying student queries, and curating supplementary reading materials for enrolled learners.',
-  },
+
 ];
 
 export const researchExperience: ExperienceItem[] = [
