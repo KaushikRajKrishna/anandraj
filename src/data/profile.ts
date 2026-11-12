@@ -5,7 +5,7 @@ export const profile = {
   department: 'Department of Liberal Arts',
   institution: 'Indian Institute of Technology Hyderabad',
   institutionShort: 'IIT Hyderabad',
-  email: 'la24resch11006@iith.ac.in',
+  email: 'anandraj.du16@gmail.com',
   phone: '+91 9205231252',
   phoneHref: 'tel:+919205231252',
   location: 'Hyderabad, India',
@@ -35,12 +35,3 @@ export const biography = [
   'Since September 2024, I have worked as a volunteer researcher with the Telangana Gig and Platform Workers Union (TGPWU) in Hyderabad. In 2026, I served as a Teaching Assistant for the NPTEL course “Migration, Mobility, and Development” offered by Dr. Amrita Datta at IIT Hyderabad. I qualified the UGC National Eligibility Test for Assistant Professor in June 2023.',
 ];
 
-// Professional profile summary rows (About page).
-export const professionalProfile = [
-  { label: 'Current position', value: 'PhD Scholar, Department of Liberal Arts, IIT Hyderabad (July 2024 – ongoing)' },
-  { label: 'Fellowship', value: 'Ministry of Education (MoE) Fellowship, July 2024 – June 2029' },
-  { label: 'Qualification', value: 'UGC National Eligibility Test for Assistant Professor (June 2023)' },
-  { label: 'Field engagement', value: 'Volunteer Researcher, Telangana Gig and Platform Workers Union (Sept 2024 – present)' },
-  { label: 'Teaching', value: 'Teaching Assistant, NPTEL course “Migration, Mobility, and Development” (2026)' },
-  { label: 'Location', value: 'Hyderabad, India' },
-];

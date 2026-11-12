@@ -6,6 +6,7 @@ import { teaching } from '../../data/experience';
 import { conferences } from '../../data/activities';
 
 const items = teaching.map((e) => ({ period: e.period, title: e.role, subtitle: e.organisation, description: e.description }));
+const index = [{ id: 'teaching', letter: 'A', label: 'Teaching and Lectures' }];
 ---
 
 <SubPage
@@ -14,6 +15,7 @@ const items = teaching.map((e) => ({ period: e.period, title: e.role, subtitle: 
   lead="Teaching, live classes and lectures."
   description="Teaching and lectures by Anand Raj, including live classes for the NPTEL course “Migration, Mobility, and Development”."
   group="/activities"
+  index={index}
 >
   <Section id="teaching" title="Teaching and Lectures" count={teaching.length}>
     <Timeline items={items} />

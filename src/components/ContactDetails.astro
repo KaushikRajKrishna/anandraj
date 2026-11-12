@@ -24,10 +24,6 @@ const { showAffiliation = true } = Astro.props;
     <dd><a href={`mailto:${profile.email}`}>{profile.email}</a></dd>
   </div>
   <div>
-    <dt><Icon name="phone" /><span>Phone</span></dt>
-    <dd><a href={profile.phoneHref}>{profile.phone}</a></dd>
-  </div>
-  <div>
     <dt><Icon name="pin" /><span>Location</span></dt>
     <dd>{profile.location}</dd>
   </div>

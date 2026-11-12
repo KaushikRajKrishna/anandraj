@@ -22,6 +22,12 @@ import { statement, questions, places, now } from '../data/home';
       <p class="statement">{statement}</p>
       <div class="actions">
         <ProfileLinks />
+        <p class="interests">
+          <span>Key interests:</span> Political Economy · Labour and Employment (Digital and Platform Work) · Migration · Urbanisation · Science and Technology Studies (STS) · Development Studies
+        </p>
+        <p class="interests secondary">
+          <span>Also interested in:</span> Economic Sociology, AI and Society, Youth Studies, Research Methodology
+        </p>
       </div>
       </div>
       <figure class="hero-media">
@@ -214,6 +220,23 @@ import { statement, questions, places, now } from '../data/home';
 
   .actions {
     margin-top: 2.25rem;
+  }
+
+  .interests {
+    margin-top: 0.9rem;
+    font-size: 0.94rem;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 44rem;
+  }
+
+  .interests.secondary {
+    margin-top: 0.35rem;
+  }
+
+  .interests span {
+    color: var(--ink);
+    font-weight: 600;
   }
 
   /* Questions */

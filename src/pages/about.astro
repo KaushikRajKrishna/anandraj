@@ -4,7 +4,7 @@ import PageHeader from '../components/PageHeader.astro';
 import Section from '../components/Section.astro';
 import SectionIndex from '../components/SectionIndex.astro';
 import Timeline from '../components/Timeline.astro';
-import { biography, professionalProfile, profile } from '../data/profile';
+import { biography, profile } from '../data/profile';
 import { education } from '../data/education';
 import { workExperience } from '../data/experience';
 
@@ -26,15 +26,14 @@ const work = workExperience.map((w) => ({
 
 const index = [
   { id: 'biography', label: 'Biography' },
-  { id: 'education', label: 'Education' },
   { id: 'work', label: 'Work Experience' },
-  { id: 'profile', label: 'Professional Profile' },
+  { id: 'education', label: 'Education' },
 ];
 ---
 
 <BaseLayout
   title="About"
-  description="Biography, education and work experience of Anand Raj, PhD Scholar in the Department of Liberal Arts, IIT Hyderabad."
+  description="Biography, work experience and education of Anand Raj, PhD Scholar in the Department of Liberal Arts, IIT Hyderabad."
 >
   <PageHeader
     eyebrow="About"
@@ -52,10 +51,6 @@ const index = [
         </div>
       </Section>
 
-      <Section id="education" title="Education">
-        <Timeline items={educationTimeline} />
-      </Section>
-
       <Section
         id="work"
         title="Work Experience"
@@ -64,15 +59,8 @@ const index = [
         <Timeline items={work} />
       </Section>
 
-      <Section id="profile" title="Professional Profile">
-        <dl class="profile-table">
-          {professionalProfile.map((row) => (
-            <div>
-              <dt>{row.label}</dt>
-              <dd>{row.value}</dd>
-            </div>
-          ))}
-        </dl>
+      <Section id="education" title="Education">
+        <Timeline items={educationTimeline} />
       </Section>
     </div>
   </div>
@@ -120,39 +108,6 @@ const index = [
   .bg-grid p {
     margin: 0;
     font-size: 0.92rem;
-  }
-
-  .profile-table {
-    margin: 0;
-  }
-
-  .profile-table > div {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.1rem;
-    padding-block: 0.75rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  @media (min-width: 640px) {
-    .profile-table > div {
-      grid-template-columns: 11rem minmax(0, 1fr);
-      gap: 1.5rem;
-    }
-  }
-
-  .profile-table dt {
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding-top: 0.15rem;
-  }
-
-  .profile-table dd {
-    margin: 0;
-    color: var(--ink);
   }
 
 </style>
