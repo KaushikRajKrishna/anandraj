@@ -3,6 +3,8 @@ import SubPage from '../../components/SubPage.astro';
 import Section from '../../components/Section.astro';
 import DatedList from '../../components/DatedList.astro';
 import { responsibilities } from '../../data/activities';
+
+const index = [{ id: 'responsibilities', letter: 'A', label: 'Academic Responsibilities and Leadership' }];
 ---
 
 <SubPage
@@ -11,6 +13,7 @@ import { responsibilities } from '../../data/activities';
   lead="Institutional roles at IIT Hyderabad and mentoring for students from marginalised backgrounds."
   description="Academic responsibilities and leadership roles of Anand Raj at IIT Hyderabad, and academic mentoring."
   group="/activities"
+  index={index}
 >
   <Section id="responsibilities" title="Academic Responsibilities and Leadership" count={responsibilities.length}>
     <DatedList items={responsibilities} />

@@ -1,11 +1,10 @@
 ---
 // Lettered bibliography sections with a sticky "On this page" index.
-// Shared by the Academic Publications and Blogs / Writings pages.
+// Shared by the Academic Publications and Blogs / Gray Writings pages.
 import Section from './Section.astro';
 import SectionIndex from './SectionIndex.astro';
 import Citation from './Citation.astro';
 import type { PublicationSection } from '../data/publications';
-import { profile } from '../data/profile';
 
 interface Props {
   sections: PublicationSection[];
@@ -31,11 +30,6 @@ const index = sections.map((s) => ({ id: s.id, label: s.title, letter: s.letter 
     ))}
 
     <slot name="after" />
-
-    <p class="note">
-      Statuses such as <em>accepted</em> and <em>forthcoming</em> are as listed in the current CV. For a complete
-      record, <a href={profile.cv} download="Anand-Raj-CV.pdf" data-astro-reload>download the CV</a>.
-    </p>
   </div>
 </div>
 

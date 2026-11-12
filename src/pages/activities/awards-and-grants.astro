@@ -3,6 +3,8 @@ import SubPage from '../../components/SubPage.astro';
 import Section from '../../components/Section.astro';
 import DatedList from '../../components/DatedList.astro';
 import { awards } from '../../data/activities';
+
+const index = [{ id: 'awards', letter: 'A', label: 'Awards and Fellowships' }];
 ---
 
 <SubPage
@@ -11,6 +13,7 @@ import { awards } from '../../data/activities';
   lead="Fellowships, national qualifications and academic distinctions."
   description="Fellowships, awards and academic distinctions of Anand Raj, including the Ministry of Education PhD Fellowship."
   group="/activities"
+  index={index}
 >
   <Section id="awards" title="Awards and Fellowships" count={awards.length}>
     <DatedList items={awards} />

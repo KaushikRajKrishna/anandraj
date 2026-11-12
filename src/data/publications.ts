@@ -36,7 +36,14 @@ export const publicationSections: PublicationSection[] = [
     id: 'journal-articles',
     group: 'academic',
     letter: 'A',
-    title: 'Journal Articles and Book Reviews',
+    title: 'Journal Articles',
+    items: [],
+  },
+  {
+    id: 'book-reviews',
+    group: 'academic',
+    letter: 'B',
+    title: 'Book Reviews',
     items: [
       {
         id: 'ijurr-2026',
@@ -77,27 +84,8 @@ export const publicationSections: PublicationSection[] = [
   {
     id: 'book-chapters',
     group: 'academic',
-    letter: 'B',
-    title: 'Book Chapters',
-    items: [
-      {
-        id: 'gig-sdgs-2026',
-        authors: 'Raj, Anand, Faras, F., & Datta, A.',
-        year: '2026',
-        title: 'Platform-based gig work and SDGs: Contrasting global policy and worker perspectives',
-        venuePrefix: 'In',
-        venue: 'Gig Work in Growing India',
-        detail: 'Taylor & Francis',
-        status: 'Accepted',
-        titleStyle: 'quoted',
-      },
-    ],
-  },
-  {
-    id: 'books-reports',
-    group: 'academic',
     letter: 'C',
-    title: 'Books and Research Reports',
+    title: 'Book Chapters',
     items: [
       {
         id: 'labour-leaders-2025',
@@ -106,7 +94,25 @@ export const publicationSections: PublicationSection[] = [
         title: 'The Role of Labour Leaders in the Indian Freedom Movement',
         detail: 'Aakar Books, New Delhi',
         isbn: '8197890587',
+        url: 'https://aakarbooks.com/product/role-of-labour-leaders-in-the-indian-freedom-movement/?srsltid=AYCX9vIUROCYE9Dy88pyFICfG7Ap6nTpsdqfIMQVUzPAY_q63-aHHISj',
         titleStyle: 'italic',
+      },
+    ],
+  },
+  {
+    id: 'research-reports',
+    group: 'academic',
+    letter: 'D',
+    title: 'Research Reports',
+    items: [
+      {
+        id: 'pulse-2026',
+        authors: 'Raj, Anand',
+        year: '2026',
+        title: 'Towards A Beautiful PhD Journey',
+        venue: 'Pulse',
+        detail: 'Vol. 6 (pp. 53–54), Sunshine Newsletter, IITH',
+        titleStyle: 'quoted',
       },
       {
         id: 'vvgnli-2024',
@@ -154,36 +160,11 @@ export const publicationSections: PublicationSection[] = [
       },
     ],
   },
-  {
-    id: 'other-writings',
-    group: 'writings',
-    letter: 'B',
-    title: 'Other Academic Writings',
-    items: [
-      {
-        id: 'pulse-2026',
-        authors: 'Raj, Anand',
-        year: '2026',
-        title: 'Towards A Beautiful PhD Journey',
-        venue: 'Pulse',
-        detail: 'Vol. 6 (pp. 53–54), Sunshine Newsletter, IITH',
-        titleStyle: 'quoted',
-      },
-      {
-        id: 'du-term-paper-2021',
-        authors: 'Raj, Anand',
-        year: '2021',
-        title: 'Un (Employment), Policies and Labour Migration from Bihar',
-        detail: 'Term paper, University of Delhi (Jan 2021 – July 2021)',
-        titleStyle: 'quoted',
-      },
-    ],
-  },
 ];
 
 export const allPublications = publicationSections.flatMap((s) => s.items);
 
 /** Academic Publications page (/publications) */
 export const academicSections = publicationSections.filter((s) => s.group === 'academic');
-/** Blogs / Writings page (/writings) */
+/** Blogs / Gray Writings page (/writings) */
 export const writingSections = publicationSections.filter((s) => s.group === 'writings');

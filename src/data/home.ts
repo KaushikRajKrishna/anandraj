@@ -34,8 +34,8 @@ export const questions: Question[] = [
   {
     q: 'What does the history of India’s labour movement offer workers who are organising today?',
     connected: [
-      { label: 'The Role of Labour Leaders in the Indian Freedom Movement (2025)', href: '/publications#books-reports' },
-      { label: 'Labour Movement and Anti-Colonial Freedom Movement (2024)', href: '/publications#books-reports' },
+      { label: 'The Role of Labour Leaders in the Indian Freedom Movement (2025)', href: '/publications#book-chapters' },
+      { label: 'Labour Movement and Anti-Colonial Freedom Movement (2024)', href: '/publications#research-reports' },
     ],
   },
 ];
@@ -106,7 +106,7 @@ export const now = {
   asOf: 'November 2026',
   items: [
     { label: 'Doctoral research', text: 'Third year of the PhD in the Department of Liberal Arts, IIT Hyderabad, after presenting fieldwork from India at the University of Toronto’s urban mixed-methods workshop in August 2026.' },
-    { label: 'With workers', text: 'Ongoing comparative research for the Telangana Gig and Platform Workers Union on how trade union movements elsewhere secured better legislation.' },
+    // { label: 'With workers', text: 'Ongoing comparative research for the Telangana Gig and Platform Workers Union on how trade union movements elsewhere secured better legislation.' },
     { label: 'In press', text: 'A co-authored chapter in Gig Work in Growing India (Taylor & Francis) and a book review in the International Journal of Urban and Regional Research.' },
     { label: 'In progress', text: '“Migrant Gig Workers, Electoral Politics, and Unequal Development in India”, with Shaik Salauddin.' },
   ],

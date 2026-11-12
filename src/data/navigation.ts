@@ -9,18 +9,18 @@ export interface NavItem extends NavLink {
   children?: NavLink[];
 }
 
-// Main menu. "My Writings" groups two pages in a dropdown.
+// Main menu. "My Publications" groups two pages in a dropdown.
 export const navigation: NavItem[] = [
   { label: 'Home', href: '/', description: 'Introduction, research questions and current work' },
-  { label: 'About', href: '/about', description: 'Biography, education and work experience' },
+  { label: 'About', href: '/about', description: 'Biography, work experience and education' },
   // { label: 'Research', href: '/research', description: 'Research interests, projects and research experience' },
   {
-    label: 'My Writings',
+    label: 'My Publications',
     href: '/publications',
     description: 'Academic publications, blogs and other writings',
     children: [
       { label: 'Academic Publications', href: '/publications', description: 'Journal articles, book reviews, book chapters, books and research reports' },
-      { label: 'Blogs / Writings', href: '/writings', description: 'Public scholarship, essays and other academic writings' },
+      { label: 'Blogs / Gray Writings', href: '/writings', description: 'Public scholarship, essays and other academic writings' },
     ],
   },
   {

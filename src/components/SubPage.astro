@@ -20,7 +20,7 @@ const { title, description, eyebrow, lead, index } = Astro.props;
 <BaseLayout title={title} description={description}>
   <PageHeader eyebrow={eyebrow} title={title} lead={lead} />
 
-  {index && index.length > 1 ? (
+  {index && index.length > 0 ? (
     <div class="container page-grid">
       <SectionIndex items={index} />
       <div>
