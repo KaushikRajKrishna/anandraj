@@ -18,7 +18,8 @@ const viewerData = albums.map((a) =>
   a.photos.map((p) => ({
     src: photoUrl(a, p, 'large'),
     caption: p.caption ?? '',
-    alt: p.caption ? (a.slug === 'sketches' ? p.caption : `${p.caption} (${a.place})`) : a.slug === 'sketches' ? 'Pencil sketch' : `Photograph from ${a.place}`,
+    date: p.date ?? '',
+    alt: p.caption ? (a.slug === 'sketches' ? p.caption : `${p.caption} (${a.location})`) : a.slug === 'sketches' ? 'Pencil sketch' : `Photograph from ${a.location}`,
   }))
 );
 
@@ -37,7 +38,7 @@ const countLabel = (n: number) => `${n} ${n === 1 ? 'photo' : 'photos'}`;
       <details class="album" name="photo-albums" open={ai === 0} id={`album-${album.slug}`}>
         <summary>
           <span class="s-text">
-            <span class="s-place">{album.place}</span>
+            <span class="s-place">{album.location}</span>
             <span class="s-meta">
               <span>{countLabel(album.photos.length)}</span>
             </span>
@@ -85,7 +86,7 @@ const countLabel = (n: number) => `${n} ${n === 1 ? 'photo' : 'photos'}`;
 </dialog>
 
 <script>
-  type Shot = { src: string; alt: string; caption: string };
+  type Shot = { src: string; alt: string; caption: string; date: string };
 
   function initAlbums() {
     const albums = Array.from(document.querySelectorAll<HTMLDetailsElement>('details.album'));
@@ -132,7 +133,7 @@ const countLabel = (n: number) => `${n} ${n === 1 ? 'photo' : 'photos'}`;
       img.src = s.src;
       img.alt = s.alt;
       cap.textContent = s.caption;
-      count.textContent = list.length > 1 ? `${index + 1} / ${list.length}` : '';
+      count.textContent = [s.date, list.length > 1 ? `${index + 1} / ${list.length}` : ''].filter(Boolean).join('  ·  ');
       prev.hidden = next.hidden = list.length < 2;
     };
 

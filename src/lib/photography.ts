@@ -3,12 +3,14 @@
 //   public/sketches/                    → sketches
 //   public/documentary/                 → videos
 // Image sizes are read once so cards can reserve their space (no layout jumps).
+import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { albumNotes } from '../data/photography';
 import { sketchCaptions, sketchMarks, hiddenSketches } from '../data/sketches';
 import { filmNotes } from '../data/documentary';
+import { WATERMARK_KEY } from './watermark';
 
 const PUBLIC = path.join(process.cwd(), 'public');
 export const PHOTO_ROOT = path.join(PUBLIC, 'photography');
@@ -30,14 +32,20 @@ export interface Photo {
   width: number;
   height: number;
   caption?: string;
-  /** First line of the watermark, e.g. "Mumbai, Maharashtra · November 2023" */
+  /** First line of the watermark, e.g. "Mumbai, India" */
   mark?: string;
+  /** Month and year shown under the caption, e.g. "November 2023" */
+  date?: string;
+  /** Short code that changes when the photo, its watermark text or the watermark style changes */
+  version: string;
 }
 
 export interface Album {
   name: string;
   slug: string;
   place: string;
+  /** "City, Country" from src/data/photography.ts (falls back to the place name) */
+  location: string;
   when: string;
   blurb?: string;
   photos: Photo[];
@@ -54,12 +62,15 @@ export const slugify = (s: string) =>
     .replace(/-+/g, '-');
 
 /** URL of a web copy of a photo */
+// The ?v= code makes browsers download a fresh copy whenever the watermark or photo changes,
+// instead of showing an old copy from their cache.
 export const photoUrl = (album: Album, photo: Photo, size: SizeName) =>
-  `/photo-cache/${album.slug}/${photo.slug}-${size}.webp`;
+  `/photo-cache/${album.slug}/${photo.slug}-${size}.webp?v=${photo.version}`;
 
 /** "Quebec City August 2026" → place "Quebec City", when "August 2026" */
 function parseName(name: string) {
-  const m = name.match(/^(.*?)\s+(?:([A-Za-z]+)\s+)?(\d{4})$/);
+  // Commas are optional: "Montreal, August 2026" and "Montreal August 2026" both work
+  const m = name.match(/^(.*?)[,\s]+(?:([A-Za-z]+)[,\s]+)?(\d{4})$/);
   if (!m) return { place: name, when: '', sortKey: 0 };
   const [, place, maybeMonth, year] = m;
   const monthIndex = maybeMonth ? MONTHS.indexOf(maybeMonth.toLowerCase()) : -1;
@@ -81,7 +92,8 @@ async function readPhotos(
   dir: string,
   captions: Record<string, string> = {},
   hidden: string[] = [],
-  markFor: (file: string) => string | undefined = () => undefined
+  markFor: (file: string) => string | undefined = () => undefined,
+  date?: string
 ): Promise<Photo[]> {
   if (!fs.existsSync(dir)) return [];
   const skip = new Set(hidden);
@@ -90,6 +102,13 @@ async function readPhotos(
     files.map(async (file): Promise<Photo> => {
       const full = path.join(dir, file);
       const meta = await sharp(full).metadata();
+      const stat = fs.statSync(full);
+      const mark = markFor(file);
+      const version = crypto
+        .createHash('sha1')
+        .update([file, stat.size, stat.mtimeMs, mark ?? '', WATERMARK_KEY].join('|'))
+        .digest('hex')
+        .slice(0, 8);
       const rotated = (meta.orientation ?? 1) >= 5; // EXIF says the picture is turned on its side
       return {
         file,
@@ -98,7 +117,9 @@ async function readPhotos(
         width: (rotated ? meta.height : meta.width) ?? 4,
         height: (rotated ? meta.width : meta.height) ?? 3,
         caption: captions[file],
-        mark: markFor(file),
+        mark,
+        date,
+        version,
       };
     })
   );
@@ -114,11 +135,10 @@ async function load(): Promise<Album[]> {
     folders.map(async (name): Promise<Album> => {
       const notes = albumNotes[name] ?? {};
       const { place, when, sortKey } = parseName(name);
-      const markFor = (file: string) =>
-        [notes.locations?.[file] ?? notes.location ?? place, when].filter(Boolean).join(' · ');
-      const photos = await readPhotos(path.join(PHOTO_ROOT, name), notes.captions, notes.hide, markFor);
+      const markFor = (file: string) => notes.locations?.[file] ?? notes.location ?? place;
+      const photos = await readPhotos(path.join(PHOTO_ROOT, name), notes.captions, notes.hide, markFor, when || undefined);
 
-      return { name, slug: slugify(name), place, when, blurb: notes.blurb, photos, sortKey };
+      return { name, slug: slugify(name), place, location: notes.location ?? place, when, blurb: notes.blurb, photos, sortKey };
     })
   );
 
@@ -139,7 +159,7 @@ export function getAlbums(): Promise<Album[]> {
 /** Sketches from public/sketches, as one set of cards (uses the same web copies as photos). */
 export async function getSketches(): Promise<Album> {
   const photos = await readPhotos(SKETCH_ROOT, sketchCaptions, hiddenSketches, (file) => sketchMarks[file]);
-  return { name: 'Sketches', slug: 'sketches', place: 'Sketches', when: '', photos, sortKey: 0 };
+  return { name: 'Sketches', slug: 'sketches', place: 'Sketches', location: 'Sketches', when: '', photos, sortKey: 0 };
 }
 
 /** Every image set that needs web copies (photo albums and sketches). */

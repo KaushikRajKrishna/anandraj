@@ -1,9 +1,8 @@
 // Watermark printed into the bottom-left corner of the web copies of photos and sketches:
 //
-//   Mumbai, Maharashtra · November 2023      ← optional first line
-//   anandrajresearch.com
+//   Mumbai, India              ← optional first line: white, easy to read
+//   anandrajresearch.com       ← the watermark: light, semi-transparent
 //
-// White text with a soft dark shadow so it reads on bright skies and dark scenes alike.
 // Uses the Inter font files in src/assets/fonts (SIL Open Font License, see OFL.txt there),
 // so it looks the same on every computer and build server.
 import path from 'node:path';
@@ -17,9 +16,20 @@ const SEMIBOLD = path.join(FONTS, 'Inter-SemiBold.ttf');
 
 const escapeMarkup = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/** How strong each line is: text opacity and shadow opacity */
+const STYLE = {
+  label: { text: '92%', shadow: '75%' },
+  site: { text: '48%', shadow: '22%' },
+} as const;
+
+/** Changes whenever the watermark's look changes, so browsers fetch fresh copies of every photo. */
+export const WATERMARK_KEY = JSON.stringify({ site: WATERMARK_SITE, style: STYLE, layout: 1 });
+
 /** A line of text as a transparent PNG, in white (or black for the shadow). */
-async function renderLine(text: string, fontfile: string, px: number, shadow: boolean) {
-  const colour = shadow ? 'foreground="#000000" fgalpha="80%"' : 'foreground="#ffffff" fgalpha="92%"';
+async function renderLine(text: string, fontfile: string, px: number, shadow: boolean, style: keyof typeof STYLE) {
+  const colour = shadow
+    ? `foreground="#000000" fgalpha="${STYLE[style].shadow}"`
+    : `foreground="#ffffff" fgalpha="${STYLE[style].text}"`;
   const spacing = Math.round(px * 0.02 * 1024); // slight tracking, in Pango units
   const { data, info } = await sharp({
     text: {
@@ -47,11 +57,11 @@ async function renderLine(text: string, fontfile: string, px: number, shadow: bo
 export async function addWatermark(image: Buffer, width: number, height: number, label?: string): Promise<Buffer> {
   const shortSide = Math.min(width, height);
   const big = Math.max(14, Math.round(shortSide * 0.055)); // anandrajresearch.com
-  const small = Math.max(10, Math.round(big * 0.52)); // location · date
+  const small = Math.max(10, Math.round(big * 0.5)); // City, Country
   const margin = Math.round(shortSide * 0.04);
 
-  const site = await renderLine(WATERMARK_SITE, SEMIBOLD, big, false);
-  const siteShadow = await renderLine(WATERMARK_SITE, SEMIBOLD, big, true);
+  const site = await renderLine(WATERMARK_SITE, MEDIUM, big, false, 'site');
+  const siteShadow = await renderLine(WATERMARK_SITE, MEDIUM, big, true, 'site');
   const layers: sharp.OverlayOptions[] = [];
 
   // Keep the text inside the picture even on very narrow images
@@ -61,8 +71,8 @@ export async function addWatermark(image: Buffer, width: number, height: number,
   layers.push({ input: site.data, left, top: siteTop });
 
   if (label) {
-    const line = await renderLine(label, MEDIUM, small, false);
-    const lineShadow = await renderLine(label, MEDIUM, small, true);
+    const line = await renderLine(label, SEMIBOLD, small, false, 'label');
+    const lineShadow = await renderLine(label, SEMIBOLD, small, true, 'label');
     const lineTop = Math.max(0, siteTop - line.height + Math.round(small * 0.15));
     layers.unshift({ input: lineShadow.data, left: Math.max(0, left - 8 + 1), top: Math.max(0, lineTop - 8 + 1) });
     layers.push({ input: line.data, left: left + Math.round(big * 0.04), top: lineTop });

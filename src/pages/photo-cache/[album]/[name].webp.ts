@@ -36,6 +36,10 @@ export const GET: APIRoute = async ({ props }) => {
     buffer = await sharp(marked).webp({ quality: 80 }).toBuffer();
   }
   return new Response(new Uint8Array(buffer), {
-    headers: { 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=31536000' },
+    headers: {
+      'Content-Type': 'image/webp',
+      // While developing, never reuse an old copy; on the live site the ?v= code in each URL does that job
+      'Cache-Control': import.meta.env.DEV ? 'no-cache' : 'public, max-age=31536000',
+    },
   });
 };

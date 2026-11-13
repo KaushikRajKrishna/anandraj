@@ -31,7 +31,12 @@ const { album, albumIndex, alts } = Astro.props;
             decoding="async"
           />
         </button>
-        {photo.caption && <figcaption>{photo.caption}</figcaption>}
+        {(photo.caption || photo.date) && (
+          <figcaption>
+            {photo.caption}
+            {photo.date && <span class="date">{photo.date}</span>}
+          </figcaption>
+        )}
       </figure>
     </li>
   ))}
@@ -133,6 +138,18 @@ const { album, albumIndex, alts } = Astro.props;
     line-height: 1.45;
     color: var(--ink);
     text-align: center;
+  }
+
+  .date {
+    display: block;
+    margin-top: 0.35rem;
+    font-family: var(--sans);
+    font-style: normal;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
   }
 
   /* A photo without a caption still gets the polaroid's thicker bottom edge */
