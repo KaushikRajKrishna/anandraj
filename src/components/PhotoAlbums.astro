@@ -1,0 +1,484 @@
+---
+// Photography albums: one collapsible section per folder in public/photography.
+// Opening one album closes the others. Photos are polaroid-style cards that open in a viewer.
+import { getAlbums, photoUrl, type Album } from '../lib/photography';
+import PhotoGrid from './PhotoGrid.astro';
+
+interface Props {
+  /** Defaults to the photography albums */
+  albums?: Album[];
+  /** Show the cards directly, without the collapsible album rows (used for Sketching) */
+  flat?: boolean;
+}
+const { albums: given, flat = false } = Astro.props;
+const albums = given ?? (await getAlbums());
+
+// Everything the viewer needs, per album
+const viewerData = albums.map((a) =>
+  a.photos.map((p) => ({
+    src: photoUrl(a, p, 'large'),
+    caption: p.caption ?? '',
+    alt: p.caption ? (a.slug === 'sketches' ? p.caption : `${p.caption} (${a.place})`) : a.slug === 'sketches' ? 'Pencil sketch' : `Photograph from ${a.place}`,
+  }))
+);
+
+const countLabel = (n: number) => `${n} ${n === 1 ? 'photo' : 'photos'}`;
+---
+
+{flat && albums.length > 0 ? (
+  <div class="flat">
+    {albums.map((album, ai) => (
+      <PhotoGrid album={album} albumIndex={ai} alts={viewerData[ai].map((v) => v.alt)} />
+    ))}
+  </div>
+) : albums.length > 0 ? (
+  <div class="albums">
+    {albums.map((album, ai) => (
+      <details class="album" name="photo-albums" open={ai === 0} id={`album-${album.slug}`}>
+        <summary>
+          <span class="s-text">
+            <span class="s-place">{album.place}</span>
+            <span class="s-meta">
+              {album.when && <span>{album.when}</span>}
+              {album.when && <span class="dot" aria-hidden="true">·</span>}
+              <span>{countLabel(album.photos.length)}</span>
+            </span>
+          </span>
+          <span class="s-thumbs" aria-hidden="true">
+            {album.photos.slice(0, 3).map((p, i) => (
+              <img src={photoUrl(album, p, 'tiny')} alt="" loading="lazy" decoding="async" style={`--i:${i}`} />
+            ))}
+          </span>
+          <span class="s-chev" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" /></svg>
+          </span>
+        </summary>
+
+        <div class="album-body">
+          {album.blurb && <p class="blurb">{album.blurb}</p>}
+          <PhotoGrid album={album} albumIndex={ai} alts={viewerData[ai].map((v) => v.alt)} />
+        </div>
+      </details>
+    ))}
+  </div>
+) : (
+  <p class="empty">New photographs will appear here soon.</p>
+)}
+
+<dialog class="photo-viewer" aria-label="Photo viewer" data-albums={JSON.stringify(viewerData)}>
+  <div class="pv-inner">
+    <button type="button" class="pv-btn pv-close" aria-label="Close viewer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <figure class="pv-figure">
+      <img class="pv-img" alt="" />
+      <figcaption>
+        <span class="pv-caption"></span>
+        <span class="pv-count"></span>
+      </figcaption>
+    </figure>
+    <button type="button" class="pv-btn pv-prev" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+    </button>
+    <button type="button" class="pv-btn pv-next" aria-label="Next photo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+    </button>
+  </div>
+</dialog>
+
+<script>
+  type Shot = { src: string; alt: string; caption: string };
+
+  function initAlbums() {
+    const albums = Array.from(document.querySelectorAll<HTMLDetailsElement>('details.album'));
+    const header = document.querySelector<HTMLElement>('.site-header');
+
+    // Accordion: only one album open at a time (also for browsers without <details name>).
+    albums.forEach((album) => {
+      if (album.dataset.bound) return;
+      album.dataset.bound = '1';
+      album.addEventListener('toggle', () => {
+        if (!album.open) return;
+        albums.forEach((other) => {
+          if (other !== album && other.open) other.open = false;
+        });
+        // Closing a long album above can push this one off screen; bring its title back into view.
+        requestAnimationFrame(() => {
+          const top = album.getBoundingClientRect().top;
+          const offset = (header?.offsetHeight ?? 72) + 12;
+          if (top < offset || top > window.innerHeight * 0.6) {
+            window.scrollBy({ top: top - offset, behavior: 'smooth' });
+          }
+        });
+      });
+    });
+
+    // Viewer
+    const dialog = document.querySelector<HTMLDialogElement>('dialog.photo-viewer');
+    if (!dialog || dialog.dataset.bound) return;
+    dialog.dataset.bound = '1';
+
+    const data: Shot[][] = JSON.parse(dialog.dataset.albums ?? '[]');
+    const img = dialog.querySelector<HTMLImageElement>('.pv-img')!;
+    const cap = dialog.querySelector<HTMLElement>('.pv-caption')!;
+    const count = dialog.querySelector<HTMLElement>('.pv-count')!;
+    const prev = dialog.querySelector<HTMLButtonElement>('.pv-prev')!;
+    const next = dialog.querySelector<HTMLButtonElement>('.pv-next')!;
+    let list: Shot[] = [];
+    let index = 0;
+    let opener: HTMLElement | null = null;
+
+    const show = (i: number) => {
+      index = (i + list.length) % list.length;
+      const s = list[index];
+      img.src = s.src;
+      img.alt = s.alt;
+      cap.textContent = s.caption;
+      count.textContent = list.length > 1 ? `${index + 1} / ${list.length}` : '';
+      prev.hidden = next.hidden = list.length < 2;
+    };
+
+    document.querySelectorAll<HTMLButtonElement>('.shot[data-album]').forEach((btn) =>
+      btn.addEventListener('click', () => {
+        opener = btn;
+        list = data[Number(btn.dataset.album)] ?? [];
+        show(Number(btn.dataset.photo));
+        dialog.showModal();
+        document.documentElement.classList.add('pv-open');
+      })
+    );
+
+    dialog.querySelector('.pv-close')?.addEventListener('click', () => dialog.close());
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    dialog.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t === dialog || t.classList.contains('pv-inner') || t.classList.contains('pv-figure')) dialog.close();
+    });
+    dialog.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') show(index + 1);
+      if (e.key === 'ArrowLeft') show(index - 1);
+    });
+    dialog.addEventListener('close', () => {
+      document.documentElement.classList.remove('pv-open');
+      opener?.focus();
+    });
+  }
+  document.addEventListener('astro:page-load', initAlbums);
+</script>
+
+<style>
+  .albums {
+    display: grid;
+    gap: 1rem;
+  }
+
+  /* ---------- Album (accordion) ---------- */
+  .album {
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    background: var(--surface);
+    transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+
+  .album[open] {
+    border-color: var(--rule-strong);
+    background:
+      radial-gradient(circle at 1px 1px, rgb(21 35 61 / 0.05) 1px, transparent 0) 0 0 / 16px 16px,
+      #fdfcf9;
+    box-shadow: 0 1px 2px rgb(21 35 61 / 0.04), 0 18px 40px -30px rgb(21 35 61 / 0.35);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.1rem clamp(1rem, 3vw, 1.6rem);
+    cursor: pointer;
+    list-style: none;
+    border-radius: 10px;
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:hover .s-place {
+    color: var(--accent-strong);
+  }
+
+  summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .s-text {
+    display: grid;
+    gap: 0.15rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .s-place {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.6vw, 1.6rem);
+    color: var(--ink);
+    line-height: 1.2;
+    transition: color 0.2s ease;
+  }
+
+  .s-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  /* Three tiny prints fanned beside the title */
+  .s-thumbs {
+    position: relative;
+    width: 7.5rem;
+    height: 3.4rem;
+    flex: none;
+  }
+
+  .s-thumbs img {
+    position: absolute;
+    top: 0.2rem;
+    left: calc(var(--i) * 2.1rem);
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border: 3px solid #fff;
+    border-radius: 3px;
+    box-shadow: 0 4px 10px -4px rgb(21 35 61 / 0.45);
+    transform: rotate(calc((var(--i) - 1) * 7deg));
+    transition: transform 0.3s ease;
+  }
+
+  summary:hover .s-thumbs img {
+    transform: rotate(calc((var(--i) - 1) * 11deg)) translateY(-2px);
+  }
+
+  .album[open] .s-thumbs {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .s-chev {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    flex: none;
+    border-radius: 50%;
+    border: 1px solid var(--rule-strong);
+    color: var(--ink);
+    transition: transform 0.3s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .s-chev svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .album[open] .s-chev {
+    transform: rotate(180deg);
+    background: var(--ink);
+    border-color: var(--ink);
+    color: #fff;
+  }
+
+  .album-body {
+    padding: 0 clamp(1rem, 3vw, 1.6rem) clamp(1.5rem, 3vw, 2.25rem);
+    animation: album-in 0.45s ease both;
+  }
+
+  @keyframes album-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .blurb {
+    margin: -0.25rem 0 1.75rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--ink-2, var(--ink));
+  }
+
+  .empty {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  @media (max-width: 539px) {
+    .s-thumbs {
+      display: none;
+    }
+  }
+
+  /* ---------- Viewer ---------- */
+  :global(html.pv-open) {
+    overflow: hidden;
+  }
+
+  .photo-viewer {
+    width: 100vw;
+    height: 100dvh;
+    max-width: none;
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: rgb(10 16 28 / 0.95);
+    color: #fff;
+  }
+
+  .photo-viewer::backdrop {
+    background: transparent;
+  }
+
+  .pv-inner {
+    position: relative;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    padding: 3.5rem 4.5rem 1.5rem;
+  }
+
+  .pv-figure {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    transform: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.9rem;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  .pv-img {
+    max-width: min(100%, 75rem);
+    max-height: calc(100dvh - 9rem);
+    object-fit: contain;
+    border: 6px solid #fff;
+    border-radius: 3px;
+    box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.7);
+  }
+
+  .pv-figure figcaption {
+    display: flex;
+    gap: 1rem;
+    align-items: baseline;
+    padding: 0;
+    color: #fff;
+    font-size: 1.05rem;
+  }
+
+  .pv-count {
+    font-family: var(--sans);
+    font-style: normal;
+    font-size: 0.8rem;
+    color: rgb(255 255 255 / 0.6);
+  }
+
+  .pv-btn {
+    position: absolute;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: rgb(255 255 255 / 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .pv-btn[hidden] {
+    display: none;
+  }
+
+  .pv-btn svg {
+    width: 1rem;
+    height: 1rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .pv-btn:hover {
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .pv-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+  }
+
+  .pv-close {
+    top: 0.9rem;
+    right: 0.9rem;
+  }
+
+  .pv-prev,
+  .pv-next {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .pv-prev {
+    left: 0.9rem;
+  }
+
+  .pv-next {
+    right: 0.9rem;
+  }
+
+  @media (max-width: 679px) {
+    .pv-inner {
+      padding: 3.75rem 0.75rem 5rem;
+    }
+
+    .pv-prev,
+    .pv-next {
+      top: auto;
+      bottom: 1rem;
+      transform: none;
+    }
+
+    .pv-prev {
+      left: calc(50% - 3.25rem);
+    }
+
+    .pv-next {
+      right: calc(50% - 3.25rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .s-thumbs img,
+    .s-chev,
+    .album-body {
+      transition: none;
+      animation: none;
+    }
+  }
+</style>

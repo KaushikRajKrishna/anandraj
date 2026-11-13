@@ -3,6 +3,9 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import Gallery from '../../components/Gallery.astro';
+import PhotoAlbums from '../../components/PhotoAlbums.astro';
+import FilmCards from '../../components/FilmCards.astro';
+import { getSketches, getFilms } from '../../lib/photography';
 import { gallerySections, type GallerySection } from '../../data/beyondAcademia';
 
 export function getStaticPaths() {
@@ -11,6 +14,11 @@ export function getStaticPaths() {
 
 const { section } = Astro.props as { section: GallerySection };
 const visibleItems = section.items.filter((item) => item.type !== 'image');
+
+// Folder-driven content: public/sketches and public/documentary
+const sketches = section.slug === 'sketching' ? await getSketches() : undefined;
+const films = section.slug === 'documentary' ? getFilms() : [];
+const hasSketches = Boolean(sketches && sketches.photos.length > 0);
 ---
 
 <BaseLayout
@@ -29,7 +37,18 @@ const visibleItems = section.items.filter((item) => item.type !== 'image');
   </PageHeader>
 
   <div class="container wrap">
-    {visibleItems.length > 0 ? (
+    {section.slug === 'photography' ? (
+      <>
+        <PhotoAlbums />
+        {visibleItems.length > 0 && <div class="extra"><Gallery items={visibleItems} /></div>}
+      </>
+    ) : hasSketches || films.length > 0 ? (
+      <>
+        {hasSketches && <PhotoAlbums albums={[sketches!]} flat />}
+        {films.length > 0 && <FilmCards films={films} />}
+        {visibleItems.length > 0 && <div class="extra"><Gallery items={visibleItems} /></div>}
+      </>
+    ) : visibleItems.length > 0 ? (
       <Gallery items={visibleItems} />
     ) : (
       <p class="empty">New work will appear here soon.</p>
@@ -40,6 +59,10 @@ const visibleItems = section.items.filter((item) => item.type !== 'image');
 <style>
   .wrap {
     padding-bottom: 5rem;
+  }
+
+  .extra {
+    margin-top: 3rem;
   }
 
   .tabs {

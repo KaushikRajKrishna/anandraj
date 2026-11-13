@@ -1,0 +1,179 @@
+---
+// Video cards for the Documentary page. Each video sits on a dark "screen" that fits
+// portrait and landscape footage alike; only a preview frame loads until play is pressed.
+import type { Film } from '../lib/photography';
+
+interface Props {
+  films: Film[];
+}
+const { films } = Astro.props;
+---
+
+<ul class="films" role="list">
+  {films.map((film) => (
+    <li class="film">
+      <div class="screen">
+        <video
+          src={`${film.src}#t=0.1`}
+          controls
+          playsinline
+          preload="metadata"
+          aria-label={film.title}
+        />
+      </div>
+      <div class="info">
+        <p class="kicker">
+          <span class="tag">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" /></svg>
+            Video
+          </span>
+          <span class="dur" aria-label="Length"></span>
+          {film.date && <span class="date">{film.date}</span>}
+        </p>
+        <h2 class="title">{film.title}</h2>
+        {film.caption && <p class="caption">{film.caption}</p>}
+      </div>
+    </li>
+  ))}
+</ul>
+
+<script>
+  // Show each video's length once the browser knows it (from the small preview download).
+  function initFilms() {
+    document.querySelectorAll<HTMLElement>('.film').forEach((card) => {
+      const video = card.querySelector('video');
+      const out = card.querySelector<HTMLElement>('.dur');
+      if (!video || !out || card.dataset.bound) return;
+      card.dataset.bound = '1';
+      const show = () => {
+        video.parentElement?.classList.toggle('is-portrait', video.videoHeight > video.videoWidth);
+        if (!Number.isFinite(video.duration)) return;
+        const s = Math.round(video.duration);
+        out.textContent = `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+      };
+      if (video.readyState >= 1) show();
+      else video.addEventListener('loadedmetadata', show, { once: true });
+      // Only one video plays at a time
+      video.addEventListener('play', () => {
+        document.querySelectorAll<HTMLVideoElement>('.film video').forEach((v) => v !== video && v.pause());
+      });
+    });
+  }
+  document.addEventListener('astro:page-load', initFilms);
+</script>
+
+<style>
+  .films {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: start;
+  }
+
+  .film {
+    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    box-shadow: 0 1px 2px rgb(21 35 61 / 0.05), 0 18px 40px -28px rgb(21 35 61 / 0.45);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .film:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 2px 4px rgb(21 35 61 / 0.06), 0 26px 48px -28px rgb(21 35 61 / 0.55);
+  }
+
+  /* Dark screen with a soft vignette; portrait and landscape both fit inside */
+  .screen {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background:
+      radial-gradient(ellipse at center, rgb(255 255 255 / 0.06), transparent 70%),
+      #0d1626;
+  }
+
+  /* Portrait footage gets a taller screen once the browser knows its shape */
+  .screen.is-portrait {
+    aspect-ratio: 1 / 1;
+  }
+
+  @media (max-width: 679px) {
+    .screen.is-portrait {
+      aspect-ratio: 3 / 4;
+    }
+  }
+
+  .screen video {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .info {
+    padding: 1.1rem 1.25rem 1.35rem;
+  }
+
+  .kicker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 0 0.5rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.12rem 0.5rem 0.12rem 0.4rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-strong);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .tag svg {
+    width: 0.75rem;
+    height: 0.75rem;
+    fill: currentColor;
+  }
+
+  .dur {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .caption {
+    margin: 0.35rem 0 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .film {
+      transition: none;
+    }
+  }
+</style>

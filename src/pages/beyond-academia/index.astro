@@ -3,8 +3,27 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHeader from '../../components/PageHeader.astro';
 import { gallerySections, beyondIntro } from '../../data/beyondAcademia';
+import { getAlbums, getSketches, getFilms } from '../../lib/photography';
 
 const countLabel = (n: number) => (n === 0 ? 'Coming soon' : `${n} ${n === 1 ? 'item' : 'items'}`);
+
+// Photography is built from the folders in public/photography
+const albums = await getAlbums();
+const photoCount = albums.reduce((n, a) => n + a.photos.length, 0);
+const photographyLabel = albums.length
+  ? `${albums.length} ${albums.length === 1 ? 'album' : 'albums'} · ${photoCount} photos`
+  : 'Coming soon';
+
+const sketchCount = (await getSketches()).photos.length;
+const filmCount = getFilms().length;
+const counts: Record<string, (fallback: number) => string> = {
+  photography: () => photographyLabel,
+  sketching: (n) => countLabel(n + sketchCount),
+  documentary: (n) => {
+    const parts = [filmCount ? `${filmCount} ${filmCount === 1 ? 'video' : 'videos'}` : '', n ? `${n} ${n === 1 ? 'item' : 'items'}` : ''].filter(Boolean);
+    return parts.length ? parts.join(' · ') : 'Coming soon';
+  },
+};
 ---
 
 <BaseLayout
@@ -28,7 +47,7 @@ const countLabel = (n: number) => (n === 0 ? 'Coming soon' : `${n} ${n === 1 ? '
                 <span class="t">{s.label}</span>
                 <span class="d">{s.description}</span>
                 <span class="meta">
-                  {countLabel(visibleItems.length)}
+                  {(counts[s.slug] ?? countLabel)(visibleItems.length)}
                   <span class="arrow" aria-hidden="true">→</span>
                 </span>
               </span>
