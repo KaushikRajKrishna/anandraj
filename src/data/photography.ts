@@ -9,17 +9,22 @@
 // - Captions below are matched by the exact file name. A photo without a caption still shows.
 // - `blurb` is the one-line introduction shown when the album is opened.
 // - `hide` lists file names to leave out (for example a duplicate).
+// - `location` is printed in the watermark on every photo, e.g. "Mumbai, Maharashtra · November 2023".
+//   `locations` overrides it for single photos taken somewhere else on the same trip.
 
 export const photographyIntro = 'Places I have walked through, one album for each journey.';
 
 export interface AlbumNotes {
   blurb?: string;
+  location?: string;
+  locations?: Record<string, string>;
   captions?: Record<string, string>;
   hide?: string[];
 }
 
 export const albumNotes: Record<string, AlbumNotes> = {
   'Quebec City August 2026': {
+    location: 'Quebec City, Quebec',
     blurb: 'Stone streets, copper roofs and the St. Lawrence in late summer.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.34 (1).jpeg': 'Château Frontenac glowing above the St. Lawrence at night.',
@@ -32,6 +37,11 @@ export const albumNotes: Record<string, AlbumNotes> = {
     },
   },
   'Toronto August 2026': {
+    location: 'Toronto, Ontario',
+    locations: {
+      'WhatsApp Image 2026-11-13 at 14.40.31 (1).jpeg': 'Niagara Falls, Ontario',
+      'WhatsApp Image 2026-11-13 at 14.40.31 (2).jpeg': 'Niagara Falls, Ontario',
+    },
     blurb: 'Towers, lake light, and a night trip to Niagara Falls.',
     captions: {
       'WhatsApp Image 2026-11-13 at 14.40.27 (1).jpeg': 'Concrete, sunlight and a single street lamp on a quiet corner.',
@@ -50,12 +60,14 @@ export const albumNotes: Record<string, AlbumNotes> = {
     },
   },
   'Kolkata May 2026': {
+    location: 'Kolkata, West Bengal',
     blurb: 'A quiet corner of the old city.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.46 (1).jpeg': 'Colonial-era tombs line a path strewn with fallen yellow blossoms.',
     },
   },
   'Nalanda December 2025': {
+    location: 'Nalanda, Bihar',
     blurb: 'Winter haze over the ruins of an ancient seat of learning.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.37 (1).jpeg': 'The great brick ruins of Nalanda, softened by the winter haze.',
@@ -69,6 +81,7 @@ export const albumNotes: Record<string, AlbumNotes> = {
     hide: ['WhatsApp Image 2026-11-13 at 17.05.39.jpeg'],
   },
   'Hampi October 2025': {
+    location: 'Hampi, Karnataka',
     blurb: 'Boulders, temples and ruins under grey October skies.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.40 (1).jpeg': 'Rows of red and green cloth offerings, and a vendor resting in their shade.',
@@ -80,12 +93,14 @@ export const albumNotes: Record<string, AlbumNotes> = {
     },
   },
   'Hyderabad July 2025': {
+    location: 'Hyderabad, Telangana',
     blurb: 'Small lives in a monsoon garden.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.45.jpeg': 'A striped beetle at work on a hibiscus bud, bright against the green.',
     },
   },
   'Mumbai November 2023': {
+    location: 'Mumbai, Maharashtra',
     blurb: 'City lights by night, and the creatures that hide by day.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.44 (1).jpeg': 'A gecko tucked between stones, patterned perfectly for hiding.',
@@ -93,6 +108,7 @@ export const albumNotes: Record<string, AlbumNotes> = {
     },
   },
   'Bengaluru 2023': {
+    location: 'Bengaluru, Karnataka',
     blurb: 'Lakes, old trees and a market full of flowers.',
     captions: {
       'WhatsApp Image 2026-11-13 at 17.05.42 (1).jpeg': 'A still lake under a heavy sky, palms leaning in to listen.',

@@ -7,7 +7,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import sharp from 'sharp';
 import { albumNotes } from '../data/photography';
-import { sketchCaptions, hiddenSketches } from '../data/sketches';
+import { sketchCaptions, sketchMarks, hiddenSketches } from '../data/sketches';
 import { filmNotes } from '../data/documentary';
 
 const PUBLIC = path.join(process.cwd(), 'public');
@@ -30,6 +30,8 @@ export interface Photo {
   width: number;
   height: number;
   caption?: string;
+  /** First line of the watermark, e.g. "Mumbai, Maharashtra · November 2023" */
+  mark?: string;
 }
 
 export interface Album {
@@ -75,7 +77,12 @@ function parseName(name: string) {
 const byName = (a: string, b: string) => a.localeCompare(b, 'en', { numeric: true });
 
 /** Image files in a folder, with their display size (camera rotation applied). */
-async function readPhotos(dir: string, captions: Record<string, string> = {}, hidden: string[] = []): Promise<Photo[]> {
+async function readPhotos(
+  dir: string,
+  captions: Record<string, string> = {},
+  hidden: string[] = [],
+  markFor: (file: string) => string | undefined = () => undefined
+): Promise<Photo[]> {
   if (!fs.existsSync(dir)) return [];
   const skip = new Set(hidden);
   const files: string[] = (fs.readdirSync(dir) as string[]).filter((f: string) => IMAGE.test(f) && !skip.has(f)).sort(byName);
@@ -91,6 +98,7 @@ async function readPhotos(dir: string, captions: Record<string, string> = {}, hi
         width: (rotated ? meta.height : meta.width) ?? 4,
         height: (rotated ? meta.width : meta.height) ?? 3,
         caption: captions[file],
+        mark: markFor(file),
       };
     })
   );
@@ -105,9 +113,11 @@ async function load(): Promise<Album[]> {
   const albums = await Promise.all(
     folders.map(async (name): Promise<Album> => {
       const notes = albumNotes[name] ?? {};
-      const photos = await readPhotos(path.join(PHOTO_ROOT, name), notes.captions, notes.hide);
-
       const { place, when, sortKey } = parseName(name);
+      const markFor = (file: string) =>
+        [notes.locations?.[file] ?? notes.location ?? place, when].filter(Boolean).join(' · ');
+      const photos = await readPhotos(path.join(PHOTO_ROOT, name), notes.captions, notes.hide, markFor);
+
       return { name, slug: slugify(name), place, when, blurb: notes.blurb, photos, sortKey };
     })
   );
@@ -128,7 +138,7 @@ export function getAlbums(): Promise<Album[]> {
 
 /** Sketches from public/sketches, as one set of cards (uses the same web copies as photos). */
 export async function getSketches(): Promise<Album> {
-  const photos = await readPhotos(SKETCH_ROOT, sketchCaptions, hiddenSketches);
+  const photos = await readPhotos(SKETCH_ROOT, sketchCaptions, hiddenSketches, (file) => sketchMarks[file]);
   return { name: 'Sketches', slug: 'sketches', place: 'Sketches', when: '', photos, sortKey: 0 };
 }
 

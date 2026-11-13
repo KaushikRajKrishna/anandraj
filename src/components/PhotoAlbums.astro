@@ -39,8 +39,6 @@ const countLabel = (n: number) => `${n} ${n === 1 ? 'photo' : 'photos'}`;
           <span class="s-text">
             <span class="s-place">{album.place}</span>
             <span class="s-meta">
-              {album.when && <span>{album.when}</span>}
-              {album.when && <span class="dot" aria-hidden="true">·</span>}
               <span>{countLabel(album.photos.length)}</span>
             </span>
           </span>
