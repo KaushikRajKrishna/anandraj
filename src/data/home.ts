@@ -87,6 +87,6 @@ export const now = {
     { label: 'Doctoral research', text: 'Third year of the PhD in the Department of Liberal Arts, IIT Hyderabad, after presenting fieldwork from India at the University of Toronto’s urban mixed-methods workshop in August 2026.' },
     // { label: 'With workers', text: 'Ongoing comparative research for the Telangana Gig and Platform Workers Union on how trade union movements elsewhere secured better legislation.' },
     { label: 'Upcoming', text: 'Visiting Fellow at the ILR School, Cornell University (September to December 2027), hosted by Prof. Virginia Doellgast.' },
-    { label: 'In progress', text: '“Migrant Gig Workers, Electoral Politics, and Unequal Development in India”, with Shaik Salauddin(Founder and President of TGPWU).' },
+    { label: 'In progress', text: '“Migrant Gig Workers, Electoral Politics, and Unequal Development in India”, with Shaik Salauddin (Founder and President of TGPWU).' },
   ],
 };
