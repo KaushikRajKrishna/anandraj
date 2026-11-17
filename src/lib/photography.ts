@@ -93,7 +93,7 @@ async function readPhotos(
   captions: Record<string, string> = {},
   hidden: string[] = [],
   markFor: (file: string) => string | undefined = () => undefined,
-  date?: string
+  dateFor: (file: string) => string | undefined = () => undefined
 ): Promise<Photo[]> {
   if (!fs.existsSync(dir)) return [];
   const skip = new Set(hidden);
@@ -118,7 +118,7 @@ async function readPhotos(
         height: (rotated ? meta.width : meta.height) ?? 3,
         caption: captions[file],
         mark,
-        date,
+        date: dateFor(file),
         version,
       };
     })
@@ -135,8 +135,13 @@ async function load(): Promise<Album[]> {
     folders.map(async (name): Promise<Album> => {
       const notes = albumNotes[name] ?? {};
       const { place, when, sortKey } = parseName(name);
-      const markFor = (file: string) => notes.locations?.[file] ?? notes.location ?? place;
-      const photos = await readPhotos(path.join(PHOTO_ROOT, name), notes.captions, notes.hide, markFor, when || undefined);
+      const info = notes.photos ?? {};
+      const captions: Record<string, string> = {};
+      for (const [file, p] of Object.entries(info)) if (p.caption) captions[file] = p.caption;
+      const markFor = (file: string) => info[file]?.location ?? notes.location ?? place;
+      // A photo's own date wins; otherwise the folder's month and year
+      const dateFor = (file: string) => info[file]?.date?.trim() || when || undefined;
+      const photos = await readPhotos(path.join(PHOTO_ROOT, name), captions, notes.hide, markFor, dateFor);
 
       return { name, slug: slugify(name), place, location: notes.location ?? place, when, blurb: notes.blurb, photos, sortKey };
     })

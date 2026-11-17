@@ -6,6 +6,8 @@ export const profile = {
   institution: 'Indian Institute of Technology Hyderabad',
   institutionShort: 'IIT Hyderabad',
   email: 'anandraj.du16@gmail.com',
+  /** Institutional address, shown after the main email in the contact details */
+  emailInstitutional: 'la24resch11006@iith.ac.in',
   phone: '+91 9205231252',
   phoneHref: 'tel:+919205231252',
   location: 'Hyderabad, India',
