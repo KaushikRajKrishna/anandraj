@@ -86,8 +86,11 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(feedbackInv
       const card = track.querySelector<HTMLElement>('.fb');
       return card ? card.offsetWidth + 28 : track.clientWidth * 0.8;
     };
+    const controls = document.querySelector<HTMLElement>('.community .controls');
     const update = () => {
       const max = track.scrollWidth - track.clientWidth - 2;
+      // Hide the arrows when every card already fits; they come back when there is more to scroll
+      if (controls) controls.hidden = max <= 0;
       buttons.forEach((b) => {
         const dir = Number(b.dataset.dir);
         b.disabled = dir < 0 ? track.scrollLeft <= 2 : track.scrollLeft >= max;
@@ -159,6 +162,10 @@ const mailto = `mailto:${profile.email}?subject=${encodeURIComponent(feedbackInv
     background: var(--accent-strong);
     border-color: var(--accent-strong);
     transform: translateY(-1px);
+  }
+
+  .controls[hidden] {
+    display: none;
   }
 
   .nav-btn:disabled {

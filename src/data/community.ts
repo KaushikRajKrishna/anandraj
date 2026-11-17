@@ -1,8 +1,9 @@
 // "Testimonials" feedback shown at the bottom of the Home page.
 //
-// HOW TO ADD REAL FEEDBACK
-// - Replace the sample entries below with real notes (only with the person's permission).
-// - Remove `sample: true` from an entry once it is real; samples show a "Sample" tag on the site.
+// HOW TO ADD FEEDBACK
+// - Add an entry to the list below (only with the person's permission). Cards appear in this order.
+// - `context` (how they know Anand) and `date` are optional and show at the bottom of the card.
+// - `sample: true` marks a placeholder; it shows a "Sample" tag on the site.
 // - `style` picks the card design: 'letter' | 'index' | 'postcard' | 'pinned' | 'ink'.
 //   If omitted, designs rotate automatically.
 
@@ -25,39 +26,23 @@ export const communityIntro =
 
 export const feedback: Feedback[] = [
   {
-    name: 'Name of a student',
-    designation: 'Learner, NPTEL course',
-    context: 'Migration, Mobility, and Development',
-    text: 'Sample entry. A short note from a student about the live classes, the reading materials, or how a question was answered. Two to four sentences works best.',
-    sample: true,
+    name: 'Dr Martin Haus',
+    designation: 'PhD, London School of Economics and Political Science',
+    context: 'Mentor, Eklavya India Foundation',
+    date: '2023',
+    text: 'Anand has always impressed me by his persistence and genuine scientific interest. Good research needs rigor, but meaningful research also requires a genuine concern for the people it is about. Anand combines both and I am confident that his work on gig workers in small cities will help shaping academic and policy discourse on this important topic in the coming years.',
   },
   {
-    name: 'Name of a collaborator',
-    designation: 'Designation, Institution',
-    context: 'Co-author',
-    text: 'Sample entry. A colleague or co-author describing what it was like to research and write together, and what Anand brought to the work.',
-    sample: true,
+    name: 'Aman Tyagi',
+    designation: 'PhD Scholar, Tata Institute of Social Sciences, Mumbai',
+    date: '2024',
+    text: 'From preparing for my PhD interview to planning international academic opportunities, Anand has been a wonderful friend and an important part of my PhD journey. Even his smallest gestures, timely advice and encouraging words have made a meaningful difference.',
   },
   {
-    name: 'Name of a union member',
-    designation: 'Telangana Gig and Platform Workers Union',
-    context: 'Volunteer research',
-    text: 'Sample entry. A note from someone at TGPWU on how the comparative research on trade union movements has supported the union’s work.',
-    sample: true,
-  },
-  {
-    name: 'Name of a workshop peer',
-    designation: 'Designation, Institution',
-    context: 'Workshop participant',
-    text: 'Sample entry. A peer from a workshop or summer school reflecting on discussions, feedback on research design, or collaboration during the programme.',
-    sample: true,
-  },
-  {
-    name: 'Name of a mentee',
-    designation: 'Student',
-    context: 'Academic mentoring',
-    text: 'Sample entry. A student mentored through Eklavya India Foundation or Speaking from Margin on how the guidance helped with higher education.',
-    sample: true,
+    name: 'Urban Fellows Programme Colleague',
+    designation: 'IIHS University',
+    date: '2023',
+    text: 'Anand is a good friend, a thoughtful writer, and a scholar with genuinely fascinating research interests. Above all, he is a deeply empathetic and kind person whose concern for others is reflected in both his work and his relationships. His intellectual curiosity and commitment to learning are evident in everything he pursues.',
   },
 ];
 
