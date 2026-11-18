@@ -106,15 +106,6 @@ export const publicationSections: PublicationSection[] = [
     title: 'Research Reports',
     items: [
       {
-        id: 'pulse-2026',
-        authors: 'Raj, Anand',
-        year: '2026',
-        title: 'Towards A Beautiful PhD Journey',
-        venue: 'Pulse',
-        detail: 'Vol. 6 (pp. 53–54), Sunshine Newsletter, IITH',
-        titleStyle: 'quoted',
-      },
-      {
         id: 'vvgnli-2024',
         authors: 'Upadhyaya, Sanjay and Raj, Anand',
         year: '2024',
@@ -137,6 +128,15 @@ export const publicationSections: PublicationSection[] = [
         year: '2026',
         title: 'Migrant Gig Workers, Electoral Politics, and Unequal Development in India',
         status: 'Forthcoming',
+        titleStyle: 'quoted',
+      },
+      {
+        id: 'pulse-2026',
+        authors: 'Raj, Anand',
+        year: '2026',
+        title: 'Towards A Beautiful PhD Journey',
+        venue: 'Pulse',
+        detail: 'Vol. 6 (pp. 53–54), Sunshine Newsletter, IITH',
         titleStyle: 'quoted',
       },
       {

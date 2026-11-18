@@ -13,6 +13,7 @@ export const profile = {
   location: 'Hyderabad, India',
   linkedin: 'https://www.linkedin.com/in/anand-raj-238131290',
   instagram: 'https://www.instagram.com/anand_rajgupta/',
+  x: 'https://x.com/AnandrajDu16',
   cv: '/files/Curriculum Vitae (CV)_ Anand Raj.pdf',
   photo: '/images/anand-raj.jpeg' as string,
   fellowship: 'Ministry of Education (MoE) Fellow',
